@@ -33,7 +33,7 @@
 
     const handleDown = () => {
         if (!$isPlaying) {
-            $midiSocket.sendChordDown(chord);
+            $midiSocket.sendChordDown(index);
             // $instrument.chordDown(chord);
         }
 

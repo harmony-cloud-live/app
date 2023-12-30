@@ -12,8 +12,7 @@
         mainSequence,
     } from '$lib/stores';
     import * as Tone from 'tone';
-    // import { instrument } from '$lib/tone';
-    import { getContext, onDestroy } from 'svelte';
+    import { onDestroy } from 'svelte';
     import {
         ChevronLeftIcon,
         ChevronRightIcon,
@@ -52,7 +51,7 @@
         }
 
         if ($isPlaying || $isSustaining) {
-            $midiSocket.sendChordDown($mainSequence[index]);
+            $midiSocket.sendChordDown(index);
             // $instrument.chordDown($mainSequence[index]);
         }
 
@@ -67,7 +66,7 @@
     const startPlayback = () => {
         console.log('start playback');
         $midiSocket.sendStopAll(); 
-        $midiSocket.sendChordDown($mainSequence[$currentIndex]); 
+        $midiSocket.sendChordDown($currentIndex); 
 
         // $instrument.stopAll();
         // $instrument.chordDown($mainSequence[$currentIndex]);
@@ -113,7 +112,7 @@
         }
 
         $currentIndex = nextIndex;
-        $midiSocket.sendChordDown($mainSequence[$currentIndex]);
+        $midiSocket.sendChordDown($currentIndex);
     }, '1n');
 
     const goToPreviousIndex = () => {

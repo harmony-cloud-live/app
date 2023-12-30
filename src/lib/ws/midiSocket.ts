@@ -1,9 +1,9 @@
 import { writable } from 'svelte/store';
-import { PlaybackEventType, type Chord } from '$lib/types';
+import { PlaybackEventType } from '$lib/types';
 import { marshalMidi } from './encoding';
 import { initializeUserId, midiSocket } from '.';
 
-export type MidiSocket = WebSocket & { sendStopAll: () => void, sendChordDown: (chord: Chord) => void };
+export type MidiSocket = WebSocket & { sendStopAll: () => void, sendChordDown: (index: number) => void };
 
 export const midiSocketReady = writable(false);
 
@@ -42,9 +42,9 @@ export const initMidiSocket = (baseUrl: string) => {
             ws.send(STOP_ALL);
     }
 
-    const sendChordDown = (chord: Chord) => {
+    const sendChordDown = (index: number) => {
         if (ws.readyState === WebSocket.OPEN)
-            ws.send(marshalMidi(PlaybackEventType.CHORD_DOWN, chord));
+            ws.send(marshalMidi(PlaybackEventType.CHORD_DOWN, index));
     }
 
     return { 

@@ -63,7 +63,10 @@ export const initControlSocket = (baseUrl: string) => {
         if (ws.readyState === WebSocket.OPEN) {
             controlSocketReady.set(true);
             console.log('web control ready', ws);
-            get(controlSocket).setUsername(username);
+            const cs = get(controlSocket);
+            cs.setUsername(username);
+            cs.getLeader();
+            cs.getMainSequence();
         }
     }
 
