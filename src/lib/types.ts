@@ -11,10 +11,7 @@ export enum PlaybackEventType {
     STOP_ALL = 2,
 }
 
-export type Chord = {
-    chordSymbol: string;
-    midiValues: Uint8Array;
-};
+export type Chord = string; 
 
 export type ChordMessage = {
     eventType: PlaybackEventType;

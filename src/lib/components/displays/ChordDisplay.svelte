@@ -9,18 +9,18 @@
         // First Chord
         if ($currentIndex < 1 && $mainSequence.length > 0) {
             previousChord = '';
-            currentChord = $mainSequence[0].chordSymbol;
-            nextChord = $mainSequence[1] ? $mainSequence[1].chordSymbol : '';
+            currentChord = $mainSequence[0];
+            nextChord = $mainSequence[1] ? $mainSequence[1] : '';
         // Last Chord
         } else if ($currentIndex === $mainSequence.length - 1) {
-            previousChord = $mainSequence[$currentIndex - 1].chordSymbol;
-            currentChord = $mainSequence[$currentIndex].chordSymbol;
+            previousChord = $mainSequence[$currentIndex - 1];
+            currentChord = $mainSequence[$currentIndex];
             nextChord = '';
         // Everything else
         } else if ($currentIndex > -1 && $currentIndex < $mainSequence.length - 1) {
-            previousChord = $mainSequence[$currentIndex - 1].chordSymbol;
-            currentChord = $mainSequence[$currentIndex].chordSymbol;
-            nextChord = $mainSequence[$currentIndex + 1].chordSymbol;
+            previousChord = $mainSequence[$currentIndex - 1];
+            currentChord = $mainSequence[$currentIndex];
+            nextChord = $mainSequence[$currentIndex + 1];
         }
     }   
 </script>

@@ -12,14 +12,11 @@
         isSustaining,
         isLeader,
     } from "$lib/stores";
-    import { getContext } from "svelte";
 
     export let chord: Chord;
     export let index: number;
     export let isInLoop: boolean, isLoopStart: boolean, isLoopEnd: boolean;
     export let isCurrent: boolean;
-
-    $: chordSymbol = chord ? chord.chordSymbol : '';
 
     let fontSize = 1;
     $: {
@@ -93,7 +90,7 @@
     on:pointerdown|preventDefault={handleDown}
     on:pointerup|preventDefault={handleUp}
     on:pointermove|preventDefault={handleMove}>
-    {chordSymbol}
+    {chord}
 </button>
 
 <style>

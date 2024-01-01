@@ -53,17 +53,5 @@ export const unmarshalControlEvent = (buffer: ArrayBuffer): ControlEvent | null 
         console.log('unmarshal: failed to parse payload type', eventType, e, buffer);
     }
 
-    // Adjust the payload for Chord type
-    if (Array.isArray(payload) && payload.length > 0 && 'midiValues' in payload[0] && 'midiValuesLength' in payload[0]) {
-        payload = payload.map((chord: any) => {
-            const midiValuesUint8 = new Uint8Array(chord.midiValuesLength);
-            midiValuesUint8.set(chord.midiValues);
-            return {
-                chordSymbol: chord.chordSymbol,
-                midiValues: midiValuesUint8
-            };
-        });
-    }
-
     return { type: eventType, payload };
 }
