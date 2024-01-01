@@ -1,5 +1,6 @@
 <script lang="ts">
     import { BeatDisplay, ChordButtons, ChordDisplay } from '$lib/components';
+    import Footer from '$lib/components/Footer.svelte';
     import ClientDisplay from '$lib/components/displays/ClientDisplay.svelte';
     import { setContext } from 'svelte';
 
@@ -11,19 +12,23 @@
     <BeatDisplay />
     <ChordButtons />
     <footer>
-        <ClientDisplay />
+        <Footer />
     </footer>
 </section>
 
 <style>
     footer {
         position: fixed;
-        bottom: 2em;
+        box-sizing: border-box;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        padding: 2rem;
+        margin: 0 auto;
+        font-size: .9em;
         display: flex;
         flex-direction: row;
-        align-items: center;
-        justify-content: center;
-        width: 100%;
-        overflow: hidden;
+        justify-content: space-between;
+        align-items: flex-end;
     }
 </style>

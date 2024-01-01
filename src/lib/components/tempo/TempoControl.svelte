@@ -2,8 +2,11 @@
     import TapTempo from './TapTempo.svelte';
     import IncrementDecrement from './IncrementDecrement.svelte';
     import { ChevronDownIcon, ChevronUpIcon } from '$lib/icons';
+    import { isLeader } from '$lib/stores';
+    import { getContext } from 'svelte';
 
     let expanded = false;
+    $: isListener = !$isLeader && getContext('isListener');
 
     const MAX_TEMPO = 400;
     const MIN_TEMPO = 0;
@@ -13,7 +16,7 @@
     }
 </script>
 
-<div class='container'>
+<div class='container' class:isListener>
     <div class='expand-button' on:pointerdown={() => expanded = !expanded}>
         <img src={expanded ? ChevronDownIcon : ChevronUpIcon } alt='expand' width='20' />
     </div>
@@ -26,6 +29,10 @@
 </div>
 
 <style>
+    div.isListener {
+        visibility: hidden;
+    }
+
     div.expand-button {
         position: absolute;
         top: -1.75em;

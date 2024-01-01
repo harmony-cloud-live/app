@@ -1,7 +1,9 @@
 <script lang='ts'>
     import { midiSocket } from "$lib/ws";
-    // import { instrument } from "$lib/tone";
-    import { isPlaying, isSustaining } from "$lib/stores";
+    import { getContext } from 'svelte';
+    import { isLeader, isPlaying, isSustaining } from "$lib/stores";
+
+    $: isListener = !$isLeader && getContext('isListener');
 
     const toggleSustain = () => {
         if ($isSustaining && !$isPlaying) {
@@ -12,7 +14,7 @@
     };
 </script>
 
-<div class="container">
+<div class="container" class:isListener>
     <button class:active={$isSustaining} on:click={toggleSustain}>
         sustain
     </button>
@@ -48,5 +50,9 @@
     button.active {
         background: linear-gradient(70deg, #00d2ff 0%, #3a47d5 100%);
         outline: 2.5px solid; 
+    }
+
+    div.isListener {
+        visibility: hidden;
     }
 </style>
