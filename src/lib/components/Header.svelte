@@ -1,14 +1,18 @@
 <script>
     import { page } from '$app/stores';
     import { RefreshIcon, SettingsIcon } from '$lib/icons';
-    import { isLeader } from '$lib/stores';
+    import { currentBeat, currentIndex, isLeader } from '$lib/stores';
     import { controlSocket } from '$lib/ws';
 </script>
 
 <header>
     <div class="corner">
         {#if $isLeader}
-            <button on:click={$controlSocket.newMainSequence}>
+            <button on:click={() => {
+                $controlSocket.newMainSequence();
+                $currentIndex = 0;
+                $currentBeat = 0;
+            }}>
                 <img src={RefreshIcon} alt="Refresh" />
             </button>
         {/if}

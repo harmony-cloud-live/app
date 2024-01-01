@@ -30,8 +30,6 @@
 
 
     const unsubMainSequence = mainSequence.subscribe(() => {
-        $currentIndex = 0;
-        $currentBeat = 0;
         if (isListener) return;
         $midiSocket.sendStopAll();
         // $instrument.stopAll();
@@ -44,9 +42,7 @@
             // $instrument.stopAll();
         }
 
-        if (!$mainSequence[index] ||
-            !$mainSequence[index].chordSymbol ||
-            !$mainSequence[index].midiValues.length) {
+        if (!$mainSequence[index]) {
             return;
         }
 
@@ -112,7 +108,7 @@
         }
 
         $currentIndex = nextIndex;
-        $midiSocket.sendChordDown($currentIndex);
+        // $midiSocket.sendChordDown($currentIndex);
     }, '1n');
 
     const goToPreviousIndex = () => {

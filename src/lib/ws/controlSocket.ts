@@ -71,7 +71,7 @@ export const initControlSocket = (baseUrl: string) => {
     }
 
     ws.onclose = () => {
-        if(ws.readyState === WebSocket.CLOSED) {
+        if (ws.readyState === WebSocket.CLOSED) {
             controlSocketReady.set(false);
         }
         setTimeout(() => {

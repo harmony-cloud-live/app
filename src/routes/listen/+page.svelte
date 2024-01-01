@@ -1,18 +1,9 @@
 <script lang="ts">
     import { BeatDisplay, ChordButtons, ChordDisplay } from '$lib/components';
     import ClientDisplay from '$lib/components/displays/ClientDisplay.svelte';
-    import { controlSocket } from '$lib/ws';
-    import { onMount, setContext } from 'svelte';
+    import { setContext } from 'svelte';
 
     setContext('isListener', true);
-    onMount(() => {
-        $controlSocket.setUsername(localStorage.getItem('hc-username') || '');
-        $controlSocket.getLeader();
-        $controlSocket.getMainSequence();
-        $controlSocket.getIndex();
-        $controlSocket.getBeat();
-        console.log('mounting play page');
-    });
 </script>
 
 <section>

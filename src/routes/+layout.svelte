@@ -1,10 +1,18 @@
 <script>
-    import { isReady, settings } from '$lib/stores';
+    import { controlSocket, isReady, settings } from '$lib/stores';
     import { Header, WelcomeModal } from '$lib/components';
 
     import './styles.css';
-    import { onDestroy } from 'svelte';
+    import { onDestroy, onMount } from 'svelte';
     import * as Tone from 'tone';
+
+    onMount(() => {
+        $controlSocket.setUsername(localStorage.getItem('hc-username') || '');
+        $controlSocket.getLeader();
+        $controlSocket.getMainSequence();
+        $controlSocket.getIndex();
+        $controlSocket.getBeat();
+    });
 
     const unsubscribe = settings.subscribe((settings) => {
         Tone.Transport.bpm.value = settings.tempo;
