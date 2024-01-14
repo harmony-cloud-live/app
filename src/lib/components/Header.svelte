@@ -1,7 +1,7 @@
 <script>
     import { page } from '$app/stores';
     import { RefreshIcon, SettingsIcon } from '$lib/icons';
-    import { currentBeat, currentIndex, isLeader } from '$lib/stores';
+    import { currentBeat, currentIndex, isLeader, loopStart, loopEnd } from '$lib/stores';
     import { controlSocket } from '$lib/ws';
 </script>
 
@@ -12,6 +12,8 @@
                 $controlSocket.newMainSequence();
                 $currentIndex = 0;
                 $currentBeat = 0;
+                $loopStart = -1;
+                $loopEnd = -1;
             }}>
                 <img src={RefreshIcon} alt="Refresh" />
             </button>
