@@ -29,7 +29,6 @@
 	},
 	"type": "module",
 	"dependencies": {
-		"@tonejs/piano": "^0.2.1",
 		"dotenv": "^16.3.1",
 		"events": "^3.3.0",
 		"svelte-loading-spinners": "^0.3.4",
