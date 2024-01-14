@@ -66,6 +66,7 @@ export const initControlSocket = (baseUrl: string) => {
             const cs = get(controlSocket);
             cs.setUsername(username);
             cs.getLeader();
+            cs.getClients();
             cs.getMainSequence();
         }
     }
@@ -118,7 +119,10 @@ export const initControlSocket = (baseUrl: string) => {
                 break;
             case ControlEventType.GET_CLIENTS:
                 console.log('received clients', data.payload);
-                clients.set(data.payload as Client[]);
+                if (Array.isArray(data.payload)) {
+                    const sortedClients = (data.payload as Client[]).sort((a, b) => a.username.localeCompare(b.username));
+                    clients.set(sortedClients);
+                }
                 break;
             default:
                 console.log('unknown control event type', data.type)
