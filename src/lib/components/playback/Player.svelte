@@ -20,23 +20,25 @@
         PauseIcon,
         PlayIcon,
     } from '$lib/icons';
-    import { slide } from 'svelte/transition';
-    import { cubicOut } from 'svelte/easing';
+    import { fly, slide } from 'svelte/transition';
+    import { cubicInOut, cubicOut } from 'svelte/easing';
 
     $: isLooping = $loopStart !== -1 && $loopEnd !== -1;
     $: effectiveEnd = isLooping ? $loopEnd : $mainSequence.length - 1;
     $: effectiveStart = isLooping ? $loopStart : 0;
-    $: isListener = !$isLeader;
-
 
     const unsubMainSequence = mainSequence.subscribe(() => {
-        if (isListener) return;
+        $currentIndex = 0;
+        $currentBeat = 0;
+        $loopStart = -1;
+        $loopEnd = -1;
+        if (!$isLeader) return;
         $midiSocket.sendStopAll();
         // $instrument.stopAll();
-    })
+    });
 
     const unsubCurrentIndex = currentIndex.subscribe((index) => {
-        if (isListener) return;
+        if (!$isLeader) return;
         if ($isPlaying || $isSustaining) {
             $midiSocket.sendStopAll();
             // $instrument.stopAll();
@@ -141,7 +143,7 @@
     });
 </script>
 
-<div class="container">
+<div class="container" transition:fly={{ y: -100, duration: 125, easing: cubicInOut }}>
     <button on:click={goToPreviousIndex}>
         <img src={ChevronLeftIcon} alt="previous" />
     </button>
@@ -212,9 +214,5 @@
         width: 2.5em;
         height: 2.5em;
         object-fit: contain;
-        /* &.play {
-            width: 2.5em;
-            height: 2.5em;
-        } */
     }
 </style>

@@ -1,9 +1,9 @@
 <script lang='ts'>
     import { midiSocket } from "$lib/ws";
-    import { getContext } from 'svelte';
     import { isLeader, isPlaying, isSustaining } from "$lib/stores";
 
-    $: isListener = !$isLeader && getContext('isListener');
+    $: hidden = !$isLeader;
+    $: active = $isSustaining;
 
     const toggleSustain = () => {
         if ($isSustaining && !$isPlaying) {
@@ -14,8 +14,10 @@
     };
 </script>
 
-<div class="container" class:isListener>
-    <button class:active={$isSustaining} on:click={toggleSustain}>
+<div class="container"
+    class:hidden
+    class:active>
+    <button on:click={toggleSustain}>
         sustain
     </button>
 </div>
@@ -28,31 +30,28 @@
         flex-wrap: wrap;
         gap: .5em;
         max-width: 80%;
+        transition: .2s opacity;
+        border-radius: 2.5em;
+        padding: .25em;
+        height: 4.5em;
     }
 
     button {
+        width: 8em;
         font-weight: 700;
         font-size: 1.5rem;
         text-transform: uppercase;
         letter-spacing: 0.1em;
         text-decoration: none;
         text-align: center;
-        width: 8em;
-        height: 3em;
         background-color: #1a1a1a;
         color: #fff;
-        border-radius: 1em;
-        border: 0;
-        cursor: pointer;
-        outline: 2.5px transparent; 
+        border-radius: inherit;
+        border: inherit;
+        height: inherit;
     }
-
-    button.active {
-        background: linear-gradient(70deg, #00d2ff 0%, #3a47d5 100%);
-        outline: 2.5px solid; 
-    }
-
-    div.isListener {
-        visibility: hidden;
+    
+    .active {
+        background: linear-gradient(45deg, #f09433 0%,#e6683c 25%,#dc2743 50%, #cc2366 75%, #bc1888 100%);
     }
 </style>

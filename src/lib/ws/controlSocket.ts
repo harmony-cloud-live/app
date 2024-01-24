@@ -3,7 +3,6 @@ import { marshalControlEvent, unmarshalControlEvent } from './encoding';
 import { controlSocket, initializeUserId } from '.';
 import type { Chord, Client, Settings } from '$lib/types';
 import { clients, currentBeat, currentIndex, isLeader, leaderUsername, mainSequence } from '$lib/stores';
-import { goto } from '$app/navigation';
 
 export type ControlSocket = WebSocket & { 
     newIndex: (index: number) => void,
@@ -68,6 +67,8 @@ export const initControlSocket = (baseUrl: string) => {
             cs.getLeader();
             cs.getClients();
             cs.getMainSequence();
+            cs.getIndex();
+            cs.getBeat();
         }
     }
 
@@ -79,6 +80,10 @@ export const initControlSocket = (baseUrl: string) => {
             console.log('reconnecting control socket...');
             controlSocket.set(<ControlSocket>initControlSocket(baseUrl));
         }, 1000);
+    }
+    
+    ws.onerror = (event) => {
+        console.log('control socket error', event);
     }
 
     ws.onmessage = (event) => {
@@ -109,7 +114,6 @@ export const initControlSocket = (baseUrl: string) => {
                         console.log('I am leader');
                         isLeader.set(true);
                         leaderUsername.set(_leaderUsername);
-                        goto('/play');
                     } else {
                         console.log('Not leader');
                         isLeader.set(false);

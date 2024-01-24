@@ -76,10 +76,10 @@
         }
     }
 
-    $: isListener = $isLeader !== true;
+    $: isListener = !$isLeader;
 </script>
 
-<button 
+<button
     class:isListener
     class:isCurrent
     class:isInLoop
@@ -120,7 +120,7 @@
             border-radius: 0.75em 1.75em 1.75em 0.75em;
         }
     }
-
+    
     button.isCurrent {
         background: linear-gradient(
             45deg,

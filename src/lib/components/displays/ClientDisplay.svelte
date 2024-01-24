@@ -1,15 +1,14 @@
 <script lang='ts'>
     import { clients, controlSocket, isLeader, leaderUsername } from '$lib/stores';
-    import { getContext } from 'svelte';
     import { flip } from 'svelte/animate';
     import { cubicOut } from 'svelte/easing';
 
-    $: isListener = !$isLeader && getContext('isListener');
+    $: inactive = !$isLeader;
     $: expandedId = '';
 
     isLeader.subscribe(() => {
         expandedId = '';
-    })
+    });
 
     const handlePointerUp = (event: PointerEvent) => {
         if (event.target instanceof HTMLButtonElement || 
@@ -20,7 +19,7 @@
     const handleClick = (id: string) => {
         if (!$isLeader) return;
         if (expandedId !== id) {
-            expandedId = id
+            expandedId = id;
             return;
         }
         $controlSocket.newLeader(id);
@@ -29,11 +28,12 @@
 
 <svelte:window on:pointerup={handlePointerUp} />
 
-<div class="container" class:isListener>
+<div class="container" class:inactive>
     {#each $clients as client (client.userId)}
+    <div class="client-wrapper" 
+        class:expanded={expandedId === client.userId && client.username !== $leaderUsername}
+        animate:flip={{ duration: 150, easing: cubicOut }}>
         <button class="client" 
-            animate:flip={{ duration: 150, easing: cubicOut }}
-            class:expanded={expandedId === client.userId && client.username !== $leaderUsername}
             class:isLeader={client.username === $leaderUsername} 
             on:pointerdown={() => handleClick(client.userId)}
         >
@@ -43,6 +43,7 @@
                 <span class="client-name">{client.username}</span>
             {/if}
         </button>
+    </div>
     {/each}
 </div>
 
@@ -59,7 +60,8 @@
         border-top: var(--size) solid #eee;
     }
 
-    .isListener {
+    .inactive {
+        pointer-events: none;
         touch-action: none;
     }
 
@@ -71,19 +73,27 @@
         max-width: 80%;
         padding: 1em;
     }
+
+    .client-wrapper {
+        border-radius: 4em;
+        padding: .23em;
+    }
     
     .client {
         position: relative;
-        background-color: var(--color-text-2);
         padding: 1.5em;
         font-size: 1.25em;
         font-weight: 700;
-        border-radius: 4em;
         text-transform: uppercase;
         letter-spacing: 0.1em;
+        border-radius: inherit;
+        height: inherit;
+        border: inherit;
         transition: all 0.1s ease-in-out;
-        &.expanded {
-            outline: .2em solid var(--color-text);
-        }
+        background: #1a1a1a;
+    }
+
+    .expanded {
+        background: linear-gradient(45deg, #f09433 0%,#e6683c 25%,#dc2743 50%, #cc2366 75%, #bc1888 100%);
     }
 </style>

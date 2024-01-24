@@ -41,13 +41,13 @@
 
 <div class='container'>
     {#if !submitted || !username.length}
-        <input type='text' 
+        <input type='text'
             in:fly
             class:usernameError
-            placeholder='enter your name...' 
+            placeholder='enter your name...'
             on:focus={() => username = ''}
             on:keydown={handleKeyDown}
-            bind:value={username} 
+            bind:value={username}
         />
 
         <button in:fly type='submit' class='submit blue-gradient' on:pointerdown={handleSubmit}>
@@ -57,7 +57,7 @@
         <button class='edit' on:pointerdown={() => submitted = false}>
             <img src={CancelIcon} alt='edit' />
         </button>
-        <span>{username}</span> 
+        <span>{username}</span>
     {/if}
 </div>
 
@@ -77,7 +77,7 @@
         justify-content: center;
         border-radius: 2.5em;
         border: 0 transparent;
-        padding: 0.6em 1em .6em .75em;
+        padding: .6em;
         font-weight: 700;
         text-transform: uppercase;
         text-decoration: none;
@@ -90,10 +90,10 @@
 
     input[type='text'] {
         border: 0;
-        height: 2em;
-        padding: 1em 1.5em;
+        height: .75em;
+        padding: 1.1em;
         background-color: white;
-        border-radius: 1.5em;
+        border-radius: 1.15em;
     }
 
     button.edit {
@@ -113,8 +113,8 @@
     }
 
     button.submit {
-        border-radius: 1.5em;
-        padding: 1em;
+        border-radius: 1.15em;
+        padding: .8em;
         display: flex;
         align-items: center;
         justify-content: center;
@@ -127,7 +127,7 @@
 
     .submit img {
         object-fit: contain;
-        height: 2em;
-        width: 2em;
+        height: 1.25em;
+        width: 1.25em;
     }
 </style>

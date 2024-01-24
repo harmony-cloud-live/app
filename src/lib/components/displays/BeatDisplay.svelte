@@ -1,9 +1,7 @@
 <script lang='ts'>
     import { settings, currentBeat, controlSocket, isPlaying } from '$lib/stores';
-    import { getContext, onMount } from 'svelte';
+    import { onMount } from 'svelte';
     import * as Tone from 'tone';
-
-    $: isListener = getContext('isListener') === true;
 
     let beatsPerBar: number;
     let beatValue: number;
@@ -17,7 +15,6 @@
     }
 
     onMount(() => {
-        if (isListener) return;
         const beatLoop = new Tone.Loop(() => {
             $currentBeat = ($currentBeat + 1) % beatsPerBar;
             $controlSocket.newBeat($currentBeat);

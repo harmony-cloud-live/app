@@ -1,7 +1,5 @@
 <script lang='ts'>
-    import { initTone } from "$lib/tone";
-    import { midiSocketReady } from "$lib/stores";
-    import { controlSocket } from "$lib/ws";
+    import { controlSocket, midiSocketReady } from "$lib/ws";
     import { cubicOut } from "svelte/easing";
     import { fade } from "svelte/transition";
     import { onMount } from "svelte";
@@ -10,15 +8,6 @@
 
     let username: string;
     let submitted: boolean;
-
-    const handleClick = () => {
-        initTone();
-        $controlSocket.getLeader();
-        $controlSocket.getMainSequence();
-        $controlSocket.getIndex();
-        $controlSocket.getBeat();
-        $controlSocket.getClients();
-    };
 
     onMount(() => {
         let userId = localStorage.getItem("hc-userId");
@@ -40,24 +29,6 @@
                 <StatusIndicatorButton />
             {/if}
         </div>
-        {#if submitted && username.length}
-            <nav>
-                <a href="/play">
-                    <button
-                        class="orange-gradient"
-                        class:disabled={!$midiSocketReady}
-                        on:click={handleClick}>Play</button
-                    >
-                </a>
-                <a href="listen">
-                    <button
-                        class="blue-gradient"
-                        class:disabled={!$midiSocketReady}
-                        on:click={handleClick}>Listen</button
-                    >
-                </a>
-            </nav>
-        {/if}
     </div>
 </div>
 
@@ -80,7 +51,7 @@
         font-size: 1em;
     }
 
-    nav button {
+    /* nav button {
         border-radius: 1.5em;
         box-shadow: 0 0 15px 5px rgba(0, 0, 0, 0.2);
         margin: 0.5em;
@@ -101,7 +72,7 @@
     .disabled {
         cursor: not-allowed;
         opacity: 0.3;
-    }
+    } */
 
     h1 {
         font-weight: 700;

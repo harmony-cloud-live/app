@@ -1,25 +1,32 @@
-<!-- Status indicator button component-->
 <script lang='ts'>
     import { onMount, onDestroy } from 'svelte';
-    import { forceStart, isReady, midiSocketReady } from '$lib/stores';
+    import { controlSocket, midiSocketReady } from '$lib/stores';
     import { Circle3 } from 'svelte-loading-spinners';
-    import { CheckIcon } from '$lib/icons';
+    import { ChevronRightIcon } from '$lib/icons';
     import { fly } from 'svelte/transition';
+    import { initTone } from '$lib/tone';
     
-    let timedOut = false;
     let timeout: any;
+    let timedOut = false;
 
-    const connect = () => {
-        if (timedOut && !$isReady && !midiSocketReady) {
-            console.log('setting forceStart to true')
-            $forceStart = true;
-        }
-    }
+    $: reload = timedOut && !$midiSocketReady;
+
+    const handleClick = async () => {
+        if (reload) window.location.reload();
+        if (!$midiSocketReady) return; // sanity check this
+
+        await initTone();
+        $controlSocket.getLeader();
+        $controlSocket.getMainSequence();
+        $controlSocket.getIndex();
+        $controlSocket.getBeat();
+        $controlSocket.getClients();
+    };
 
     onMount(() => {
         timeout = setTimeout(() => {
             timedOut = true;
-        }, 60000);
+        }, 5000);
     });
 
     onDestroy(() => {
@@ -28,16 +35,16 @@
 </script>
 
 
-<button in:fly class={($midiSocketReady ? 'green' : 'yellow') + '-gradient'} on:click={connect}>
+<button in:fly class={($midiSocketReady ? 'green' : 'yellow') + '-gradient'} on:click={handleClick}>
     {#if $midiSocketReady}
         <span class='status'>
-            connected
-            <img src={CheckIcon} alt='check' width='25' /> 
+            START
+            <img src={ChevronRightIcon} alt='check' width='25' /> 
         </span>
     {:else}
         <span class='status'>
-            {#if timedOut}
-                continue without midi?
+            {#if reload}
+                retry?
             {:else}
                 loading midi port...
             {/if}
