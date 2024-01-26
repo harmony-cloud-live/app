@@ -1,16 +1,16 @@
-FROM node:18-alpine as BUILD_STAGE
+FROM node:20-alpine as BUILD_STAGE
 
 WORKDIR /app
 
-COPY package.json pnpm-lock.yaml ./
+COPY package.json package-lock.json ./
 
-RUN npm install -g pnpm && pnpm install --frozen-lockfile
+RUN npm i
 
 COPY . .
 
-RUN pnpm run build
+RUN npm run build
 
-FROM node:18-alpine as PROD_STAGE
+FROM node:20-alpine as PROD_STAGE
 
 WORKDIR /app
 

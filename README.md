@@ -1,11 +1,11 @@
 ## Requirements
 
-* Node 18.16.1
+* Node ^18.6.1
 
 ## Installation
 
-* clone this repo `git clone https://github.com/kevinyjiang/hc-apollo.git`
-* navigate to the project `cd hc-apollo` 
+* clone this repo `git clone https://github.com/harmony-cloud-live/app.git`
+* navigate to the project `cd app`
 * install dependencies `npm i`
 
 ## Environment Variables
