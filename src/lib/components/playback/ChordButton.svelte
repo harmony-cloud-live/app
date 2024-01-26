@@ -1,6 +1,5 @@
 <script lang='ts'>
     import type { Chord } from "$lib/types";
-    // import { instrument } from "$lib/tone";
     import { midiSocket } from "$lib/ws";
     import { 
         mainSequence, 
@@ -31,7 +30,6 @@
     const handleDown = () => {
         if (!$isPlaying) {
             $midiSocket.sendChordDown(index);
-            // $instrument.chordDown(chord);
         }
 
         $currentIndex = index;
@@ -43,7 +41,6 @@
     const handleUp = () => {
         if (!$isPlaying && !$isSustaining) {
             $midiSocket.sendStopAll();
-            // $instrument.stopAll();
         }
 
         if (!$dragging || $loopStart === -1 || $loopEnd < $loopStart) {

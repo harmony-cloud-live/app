@@ -34,14 +34,12 @@
         $loopEnd = -1;
         if (!$isLeader) return;
         $midiSocket.sendStopAll();
-        // $instrument.stopAll();
     });
 
     const unsubCurrentIndex = currentIndex.subscribe((index) => {
         if (!$isLeader) return;
         if ($isPlaying || $isSustaining) {
             $midiSocket.sendStopAll();
-            // $instrument.stopAll();
         }
 
         if (!$mainSequence[index]) {
@@ -50,7 +48,6 @@
 
         if ($isPlaying || $isSustaining) {
             $midiSocket.sendChordDown(index);
-            // $instrument.chordDown($mainSequence[index]);
         }
 
         $controlSocket.newIndex(index);
@@ -66,9 +63,6 @@
         $midiSocket.sendStopAll(); 
         $midiSocket.sendChordDown($currentIndex); 
 
-        // $instrument.stopAll();
-        // $instrument.chordDown($mainSequence[$currentIndex]);
-
         playbackLoop.start('1m');
         Tone.Transport.start();
 
@@ -81,7 +75,6 @@
         console.log('stop playback');
         if (!$isSustaining) {
             $midiSocket.sendStopAll(); 
-            // $instrument.stopAll();
         }
 
         playbackLoop.stop();
@@ -110,7 +103,6 @@
         }
 
         $currentIndex = nextIndex;
-        // $midiSocket.sendChordDown($currentIndex);
     }, '1n');
 
     const goToPreviousIndex = () => {

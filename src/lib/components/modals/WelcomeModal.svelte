@@ -51,29 +51,6 @@
         font-size: 1em;
     }
 
-    /* nav button {
-        border-radius: 1.5em;
-        box-shadow: 0 0 15px 5px rgba(0, 0, 0, 0.2);
-        margin: 0.5em;
-        border: 0 transparent;
-        padding: 0.6em 1.2em;
-        font-weight: 700;
-        font-size: 1.5rem;
-        text-transform: uppercase;
-        letter-spacing: 0.1em;
-        text-decoration: none;
-        background-color: transparent;
-        color: var(--color-text-1);
-        cursor: pointer;
-        box-shadow: 0 0 0 3px rgb(26, 26, 26, 0);
-        opacity: 1;
-    }
-
-    .disabled {
-        cursor: not-allowed;
-        opacity: 0.3;
-    } */
-
     h1 {
         font-weight: 700;
         font-size: 5em;

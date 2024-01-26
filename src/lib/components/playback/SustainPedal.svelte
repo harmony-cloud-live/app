@@ -8,7 +8,6 @@
     const toggleSustain = () => {
         if ($isSustaining && !$isPlaying) {
             $midiSocket.sendStopAll();
-            // $instrument.stopAll();
         }
         $isSustaining = !$isSustaining;
     };
