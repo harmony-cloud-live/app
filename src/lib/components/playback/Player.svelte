@@ -135,29 +135,31 @@
     });
 </script>
 
-<div class="container" transition:fly={{ y: -100, duration: 125, easing: cubicInOut }}>
-    <button on:click={goToPreviousIndex}>
-        <img src={ChevronLeftIcon} alt="previous" />
-    </button>
-    {#if $looping}
-        <button
-            class="clear"
-            on:click={clearLoop}
-            transition:slide={{ axis: 'x', easing: cubicOut, duration: 200 }}>
-            <img src={ExitLoopIcon} alt="exit loop" />
+{#if $isLeader}
+    <div class="container" transition:fly={{ y: -100, duration: 125, easing: cubicInOut }}>
+        <button on:click={goToPreviousIndex}>
+            <img src={ChevronLeftIcon} alt="previous" />
         </button>
-    {/if}
-    <button on:click={togglePlayback}>
-        {#if $isPlaying}
-            <img src={PauseIcon} alt="pause" />
-        {:else}
-            <img class="play" src={PlayIcon} alt="play" />
+        {#if $looping}
+            <button
+                class="clear"
+                on:click={clearLoop}
+                transition:slide={{ axis: 'x', easing: cubicOut, duration: 200 }}>
+                <img src={ExitLoopIcon} alt="exit loop" />
+            </button>
         {/if}
-    </button>
-    <button on:click={goToNextIndex}>
-        <img src={ChevronRightIcon} alt="next" />
-    </button>
-</div>
+        <button on:click={togglePlayback}>
+            {#if $isPlaying}
+                <img src={PauseIcon} alt="pause" />
+            {:else}
+                <img class="play" src={PlayIcon} alt="play" />
+            {/if}
+        </button>
+        <button on:click={goToNextIndex}>
+            <img src={ChevronRightIcon} alt="next" />
+        </button>
+    </div>
+{/if}
 
 <style>
     .container {
