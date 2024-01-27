@@ -1,5 +1,5 @@
 <script lang='ts'>
-    import { clients, controlSocket, isLeader, leaderUsername } from '$lib/stores';
+    import { clients, controlSocket, isLeader, leaderId } from '$lib/stores';
     import { flip } from 'svelte/animate';
     import { cubicOut } from 'svelte/easing';
 
@@ -28,16 +28,16 @@
 
 <svelte:window on:pointerup={handlePointerUp} />
 
-<div class="container" class:inactive>
+<div class="container fixed-center" class:inactive>
     {#each $clients as client (client.userId)}
     <div class="client-wrapper" 
-        class:expanded={expandedId === client.userId && client.username !== $leaderUsername}
+        class:expanded={expandedId === client.userId && client.userId !== $leaderId}
         animate:flip={{ duration: 150, easing: cubicOut }}>
         <button class="client" 
-            class:isLeader={client.username === $leaderUsername} 
-            on:pointerdown={() => handleClick(client.userId)}
+            class:isLeader={client.userId === $leaderId} 
+            on:click={() => handleClick(client.userId)}
         >
-            {#if expandedId === client.userId && client.username !== $leaderUsername}
+            {#if expandedId === client.userId && client.userId !== $leaderId}
                 <span class="client-name">promote {client.username}?</span>
             {:else}
                 <span class="client-name">{client.username}</span>

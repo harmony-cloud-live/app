@@ -1,16 +1,12 @@
 import { derived, writable } from 'svelte/store';
-import { type Chord, type Settings, InstrumentType, type Client } from './types';
+import { type TimeSignature, type Chord, type Client } from './types';
 
 // primary state
 export const mainSequence = writable<Array<Chord>>([]);
 export const currentIndex = writable(0);
-export const settings = writable<Settings>({
-    tempo: 60,
-    timeSignature: [3, 4],
-    musicLength: 32,
-    chordCollection: 'whole album',
-    instrument: InstrumentType.Piano,
-});
+export const previousIndex = writable(0);
+export const tempo = writable(60);
+export const timeSignature = writable<TimeSignature>({ upper: 4, lower: 4 });
 
 // sockets
 import { midiSocketReady, controlSocketReady } from './ws';
@@ -19,8 +15,7 @@ export { midiSocket, controlSocket } from './ws';
 
 // leader state
 export const isLeader = writable(false);
-export const leaderUsername = writable('');
-export const myUsername = writable(localStorage.getItem('hc-username') || '');
+export const leaderId = writable('');
 export const clients = writable<Array<Client>>([]);
 
 // tone.js

@@ -21,6 +21,7 @@
         $controlSocket.getIndex();
         $controlSocket.getBeat();
         $controlSocket.getClients();
+        $controlSocket.getTimeSignature();
     };
 
     onMount(() => {

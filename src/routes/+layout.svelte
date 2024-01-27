@@ -1,27 +1,25 @@
 <script>
-    import { controlSocket, isReady, settings } from '$lib/stores';
-    import { Header, Footer, WelcomeModal } from '$lib/components';
-
     import './styles.css';
-    import { onDestroy, onMount } from 'svelte';
     import * as Tone from 'tone';
+    import { initPlaybackLoop, playbackLoop, stopPlayback } from '$lib/tone';
+    import { isReady, tempo, timeSignature } from '$lib/stores';
+    import { Header, Footer, WelcomeModal } from '$lib/components';
+    import { onDestroy } from 'svelte';
 
-    onMount(() => {
-        $controlSocket.setUsername(localStorage.getItem('hc-username') || '');
-        $controlSocket.getLeader();
-        $controlSocket.getMainSequence();
-        $controlSocket.getIndex();
-        $controlSocket.getBeat();
+    const unsubscribeTempo = tempo.subscribe(t => Tone.Transport.bpm.value = t);
+    
+    const unsubscribeTimeSignature = timeSignature.subscribe((ts) => {
+        Tone.Transport.timeSignature = [ts.upper, ts.lower];
+        if (Tone.Transport.state === 'started') {
+            stopPlayback();
+        }
+        $playbackLoop = initPlaybackLoop();
     });
 
-    const unsubscribe = settings.subscribe((settings) => {
-        Tone.Transport.bpm.value = settings.tempo;
-        Tone.Transport.timeSignature = settings.timeSignature;
-
-        console.log('settings changed', settings);
+    onDestroy(() => {
+        unsubscribeTempo();
+        unsubscribeTimeSignature();
     });
-
-    onDestroy(unsubscribe);
 </script>
 
 <svelte:head>

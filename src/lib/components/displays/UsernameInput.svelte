@@ -1,31 +1,19 @@
 <script lang="ts">
     import { CancelIcon, ChevronRightIcon } from '$lib/icons';
-    import { myUsername } from '$lib/stores';
     import { controlSocket } from '$lib/ws';
-    import { onMount } from 'svelte';
     import { fly } from 'svelte/transition';
 
-    export let username = localStorage.getItem('hc-username') || '';
-    export let submitted = username.length > 0;
+    export let submitted = false;
 
+    let username = '';
     let usernameError = false;
-
-    onMount(() => {
-        if (username.length) {
-            console.log('onmount username', username)
-            $controlSocket.setUsername(username);
-            $myUsername = username;
-        }
-    }); 
 
     const handleSubmit = () => {
         username = username.trim();
-        if (username.length) {
+        if (username) {
+            $controlSocket.setUsername(username);
             usernameError = false;
             submitted = true;
-            $controlSocket.setUsername(username);
-            $myUsername = username;
-            localStorage.setItem("hc-username", username);
         } else {
             usernameError = true;
         }

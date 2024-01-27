@@ -17,6 +17,9 @@ export const initializeUserId = () => {
     return localStorage.getItem("hc-userId");
 };
 
+export const myUserId = writable(initializeUserId());
+export const myUsername = writable(localStorage.getItem('hc-username') || '');
+
 export const controlSocket = writable<ControlSocket>(initControlSocket(CONTROL_SOCKET_URL));
 export { controlSocketReady } from './controlSocket';
 

@@ -1,9 +1,10 @@
 <script lang="ts">
-    import { controlSocket, isLeader, leaderUsername } from "$lib/stores";
+    import { clients, controlSocket, isLeader, leaderId } from "$lib/stores";
     import { cubicInOut } from "svelte/easing";
     import { fly } from "svelte/transition";
 
     $: isExpanded = false;
+    $: leaderUsername = $clients.find(c => c.userId === $leaderId)?.username;
 
     isLeader.subscribe(() => {
         isExpanded = false;
@@ -28,13 +29,13 @@
 <svelte:window on:pointerup={handlePointerUp} />
 
 {#if !$isLeader}
-    <div class="container" class:isExpanded 
+    <div class="container fixed-center" class:isExpanded 
         transition:fly={{ y: -100, duration: 250, easing: cubicInOut }}>
         <button class="leader" on:click={handleClick}>
             {#if isExpanded}
                 <span class="bold">take lead?</span>
             {:else}
-                <span><span class="bold">{$leaderUsername ?? "no one"}</span> is lead</span>
+                <span><span class="bold">{leaderUsername ?? "no one"}</span> is lead</span>
             {/if}
         </button>
     </div>

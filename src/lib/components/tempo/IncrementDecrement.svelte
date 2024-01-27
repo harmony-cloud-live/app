@@ -1,5 +1,5 @@
 <script lang='ts'>
-    import { settings } from '$lib/stores';
+    import { tempo } from '$lib/stores';
     import { slide } from 'svelte/transition';
     import { quintOut } from 'svelte/easing';
 
@@ -12,7 +12,7 @@
     let longPressTimeout: any;
 
     const handleDown = (delta: number) => {
-        $settings.tempo = clampTempo($settings.tempo + delta);
+        $tempo = clampTempo($tempo + delta);
         longPressTimeout = setTimeout(() => {
             longPressActive = true;
             handleLongPress(delta);
@@ -26,7 +26,7 @@
 
     const handleLongPress = async (delta: number) => {
         while (longPressActive) {
-            $settings.tempo = clampTempo($settings.tempo + INCREMENT * delta);
+            $tempo = clampTempo($tempo + INCREMENT * delta);
             await new Promise(r => setTimeout(r, LONG_PRESS_DELAY));
         }
     }
@@ -56,7 +56,7 @@
         font-size: 2em;
         font-weight: 700;
         border-radius: 1em;
-        background-color: rgb(34, 34, 34);
+        background-color: rgb(39, 39, 39);
         border: none;
         outline: none;
 

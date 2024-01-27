@@ -20,7 +20,8 @@
     header {
         display: flex;
         justify-content: space-between;
+        align-items: center;
         padding: .75em;
-        max-height: 4.25em;
+        height: 4.25em;
     }
 </style>

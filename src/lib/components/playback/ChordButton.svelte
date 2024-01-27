@@ -10,6 +10,7 @@
         isPlaying, 
         isSustaining,
         isLeader,
+        previousIndex,
     } from "$lib/stores";
 
     export let chord: Chord;
@@ -29,6 +30,8 @@
 
     const handleDown = () => {
         if (!$isPlaying) {
+            if ($isSustaining)
+                $midiSocket.sendChordUp($previousIndex);
             $midiSocket.sendChordDown(index);
         }
 
@@ -40,7 +43,11 @@
 
     const handleUp = () => {
         if (!$isPlaying && !$isSustaining) {
-            $midiSocket.sendStopAll();
+            $midiSocket.sendChordUp(index);
+        }
+        
+        if ($isSustaining) {
+            $previousIndex = $currentIndex;
         }
 
         if (!$dragging || $loopStart === -1 || $loopEnd < $loopStart) {
@@ -103,7 +110,7 @@
         color: var(--color-text-1);
         cursor: pointer;
         outline: 3px transparent;
-        transition: all 0.25s;
+        transition: outline-width .2s, outline-color .25s, border-radius 0.25s;
         touch-action: none;
     }
 

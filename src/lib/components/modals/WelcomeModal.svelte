@@ -1,30 +1,17 @@
 <script lang='ts'>
-    import { controlSocket, midiSocketReady } from "$lib/ws";
     import { cubicOut } from "svelte/easing";
     import { fade } from "svelte/transition";
-    import { onMount } from "svelte";
     import StatusIndicatorButton from "../displays/StatusIndicatorButton.svelte";
     import UsernameInput from "../displays/UsernameInput.svelte";
 
-    let username: string;
     let submitted: boolean;
-
-    onMount(() => {
-        let userId = localStorage.getItem("hc-userId");
-        if (!userId) {
-            userId = `${Date.now()}-${Math.random().toString(36).substring(2, 9)}`;
-            localStorage.setItem("hc-userId", userId);
-        }
-
-        $controlSocket.getLeader();
-    });
 </script>
 
 <div class="modal-background" out:fade={{ duration: 150, easing: cubicOut }}>
     <div class="modal">
         <h1>harmony cloud</h1>
         <div class="user-info" class:submitted>
-            <UsernameInput bind:username bind:submitted />
+            <UsernameInput bind:submitted />
             {#if submitted}
                 <StatusIndicatorButton />
             {/if}

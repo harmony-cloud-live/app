@@ -56,7 +56,7 @@
 
     div.container {
         position: relative;
-        transition: .2s opacity;
+        transition: .25s all;
         display: flex;
         flex-direction: column;
         justify-content: center;
@@ -68,6 +68,10 @@
         &.down {
             background-color: #4d4d4d;
         }
+    }
+    
+    .hidden {
+        margin-bottom: -5em;
     }
 </style>
 

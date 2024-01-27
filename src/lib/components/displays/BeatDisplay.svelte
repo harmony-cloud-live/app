@@ -1,18 +1,15 @@
 <script lang='ts'>
-    import { settings, currentBeat, controlSocket, isPlaying } from '$lib/stores';
+    import { currentBeat, controlSocket, isPlaying, timeSignature } from '$lib/stores';
     import { onMount } from 'svelte';
     import * as Tone from 'tone';
 
     let beatsPerBar: number;
     let beatValue: number;
 
-    $: if ($settings.tempo && typeof $settings.timeSignature === 'number') {
-            beatsPerBar = $settings.timeSignature;
-            beatValue = $settings.timeSignature;
-    } else if ($settings.tempo && $settings.timeSignature instanceof Array) {
-            beatsPerBar = $settings.timeSignature[0];
-            beatValue = $settings.timeSignature[1];
-    }
+    $: if ($timeSignature) {
+        beatsPerBar = $timeSignature.upper;
+        beatValue = $timeSignature.lower;
+    } 
 
     onMount(() => {
         const beatLoop = new Tone.Loop(() => {
@@ -27,15 +24,6 @@
                 beatLoop.stop();
             }
         });
-        // Tone.Transport.scheduleRepeat((time) => {
-        //     console.log('hi')
-        //     Tone.Draw.schedule(() => {
-        //         $currentBeat = ($currentBeat + 1) % beatsPerBar;
-        //         $controlSocket.newBeat($currentBeat);
-        //     }, time);
-        // }, 
-        // `${beatValue}n`,    // repeat every beat
-        // `+${beatValue}n`);  // start after one beat
     });
 
 </script>

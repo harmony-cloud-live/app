@@ -1,5 +1,5 @@
 <script lang='ts'>
-    import { settings } from '$lib/stores';
+    import { tempo } from '$lib/stores';
     import { slide } from 'svelte/transition';
     import { MetronomeIcon } from '$lib/icons';
 
@@ -44,7 +44,7 @@
         if (tapIntervals.length >= 3) {
             const averageDiff = tapIntervals.reduce((a, b) => a + b, 0) / tapIntervals.length;
             const bpm = 60 / averageDiff;
-            $settings.tempo = clampTempo(bpm);
+            $tempo = clampTempo(bpm);
         }
 
         clearTimeout(tapTimeout);
@@ -71,7 +71,7 @@
         />
     {/if}
     <div class='bpm'>
-        <strong>{$settings.tempo}</strong>
+        <strong>{$tempo}</strong>
         {#if !expanded}
             <small>bpm</small>
         {/if}
@@ -92,7 +92,7 @@
         border-radius: 1.75em;
         padding: .5em 1em;
         min-width: 13em;
-        background-color: rgb(34, 34, 34);
+        background-color: rgb(39, 39, 39);
 
         &:active {
             background-color: rgb(51, 51, 51);

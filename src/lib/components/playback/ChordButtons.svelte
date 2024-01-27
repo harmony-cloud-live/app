@@ -1,4 +1,4 @@
-<script lang='ts'>
+<script>
     import { ChordButton } from '$lib/components';
     import {
         mainSequence,
@@ -8,14 +8,13 @@
         currentIndex,
     } from '$lib/stores';
 
-    // On pointer up, clear the loop so we don't get stuck in loop selection 
+    // clear the loop so we don't get stuck in loop selection 
     const handleGlobalUp = () => {
         $dragging = false;
         if ($loopStart !== -1 && $loopEnd !== -1 && $loopStart < $loopEnd) {
-            console.log('not clearing loop selection on pointer up', $loopStart, ':', $loopEnd);
+            console.log('not clearing loop selection on pointer up', $loopStart, 'to', $loopEnd);
             return; 
         }
-        console.log('clearing loop selection');
         $loopStart = -1;
         $loopEnd = -1;
     }
@@ -40,6 +39,6 @@
         justify-content: center;
         flex-wrap: wrap;
         gap: .5em;
-        max-width: 80%;
+        max-width: 85%;
     }
 </style>

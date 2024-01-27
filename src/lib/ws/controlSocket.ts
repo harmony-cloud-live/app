@@ -1,20 +1,32 @@
 import { get, writable } from 'svelte/store';
 import { marshalControlEvent, unmarshalControlEvent } from './encoding';
-import { controlSocket, initializeUserId } from '.';
-import type { Chord, Client, Settings } from '$lib/types';
-import { clients, currentBeat, currentIndex, isLeader, leaderUsername, mainSequence } from '$lib/stores';
+import { controlSocket, myUserId, myUsername } from '.';
+import type { Chord, Client, TimeSignature } from '$lib/types';
+import {
+    clients,
+    currentBeat,
+    currentIndex,
+    isLeader,
+    isPlaying,
+    isSustaining,
+    leaderId,
+    mainSequence,
+    timeSignature
+} from '$lib/stores';
 
 export type ControlSocket = WebSocket & { 
     newIndex: (index: number) => void,
     newBeat: (beat: number) => void,
     newMainSequence: () => void,
     newLeader: (id: string) => void,
+    newTimeSignature: (timeSignature: TimeSignature) => void,
     getIndex: () => void, 
     getBeat: () => void,
     getMainSequence: () => void,
     getLeader: () => void,
     setUsername: (username: string) => void,
     getClients: () => void,
+    getTimeSignature: () => void,
 }; 
 
 export enum ControlEventType {
@@ -30,10 +42,19 @@ export enum ControlEventType {
     NEW_LEADER = 9,
     SET_USERNAME = 10,
     GET_CLIENTS = 11,
+    GET_TIME_SIGNATURE = 12,
+    NEW_TIME_SIGNATURE = 13,
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export type ControlPayload = number | string | Chord[] | Client[] | Settings | null;
+export type ControlPayload = {
+    index?: number,
+    beat?: number,
+    chords?: Chord[],
+    timeSignature?: TimeSignature,
+    leaderId?: string,
+    username?: string,
+    clients?: Client[],
+}
 
 export type ControlEvent = {
     type: ControlEventType,
@@ -44,8 +65,8 @@ export const controlSocketReady = writable(false);
 
 export const initControlSocket = (baseUrl: string) => {
     console.log('initializing control socket...', baseUrl);
-    const userId = initializeUserId();
-    const username = localStorage.getItem('hc-username') || '';
+    const userId = get(myUserId);
+    const username = get(myUsername);
     const url = `${baseUrl}?userId=${userId}`;
     console.log('control socket url', url);
     
@@ -61,14 +82,16 @@ export const initControlSocket = (baseUrl: string) => {
     ws.onopen = () => {
         if (ws.readyState === WebSocket.OPEN) {
             controlSocketReady.set(true);
-            console.log('web control ready', ws);
+            console.log('control socket ready', ws);
+
             const cs = get(controlSocket);
-            cs.setUsername(username);
+            if (username) cs.setUsername(username);
             cs.getLeader();
             cs.getClients();
             cs.getMainSequence();
             cs.getIndex();
             cs.getBeat();
+            cs.getTimeSignature();
         }
     }
 
@@ -92,39 +115,41 @@ export const initControlSocket = (baseUrl: string) => {
 
         switch (data.type) {
             case ControlEventType.NEW_INDEX:
-                if (typeof data.payload === 'number')
-                    currentIndex.set(data.payload);
+                if (data.payload.index !== undefined)
+                    currentIndex.set(data.payload.index);
                 break;
             case ControlEventType.NEW_MAIN_SEQUENCE:
-                console.log('new main sequence');
-                if (Array.isArray(data.payload))
-                    mainSequence.set(data.payload as Chord[]);
+                console.log('new main sequence', data.payload.chords);
+                if (Array.isArray(data.payload.chords) && data.payload.chords.length > 0)
+                    mainSequence.set(data.payload.chords as Chord[]);
                 break;
             case ControlEventType.NEW_BEAT:
-                console.log('received beat', data.payload)
-                if (typeof data.payload === 'number')
-                    currentBeat.set(data.payload);
+                if (data.payload.beat !== undefined)
+                    currentBeat.set(data.payload.beat);
+                break;
+            case ControlEventType.NEW_TIME_SIGNATURE:
+                console.log('received time signature', data.payload.timeSignature as TimeSignature)
+                if (data.payload.timeSignature !== undefined) {
+                    timeSignature.set(data.payload.timeSignature as TimeSignature);
+                }
                 break;
             case ControlEventType.NEW_LEADER:
             case ControlEventType.GET_LEADER:
-                console.log('received leader', data.payload)
-                if (typeof data.payload === 'string') {
-                    const [_leaderId, _leaderUsername] = data.payload.split('|');
-                    if (_leaderId === userId) {
-                        console.log('I am leader');
+                if (data.payload.leaderId !== undefined) {
+                    if (data.payload.leaderId === userId) {
                         isLeader.set(true);
-                        leaderUsername.set(_leaderUsername);
+                        leaderId.set(data.payload.leaderId);
                     } else {
-                        console.log('Not leader');
                         isLeader.set(false);
-                        leaderUsername.set(_leaderUsername);
+                        leaderId.set(data.payload.leaderId);
+                        isPlaying.set(false);
+                        isSustaining.set(false);
                     }
                 }
                 break;
             case ControlEventType.GET_CLIENTS:
-                console.log('received clients', data.payload);
-                if (Array.isArray(data.payload)) {
-                    const sortedClients = (data.payload as Client[]).sort((a, b) => a.username.localeCompare(b.username));
+                if (Array.isArray(data.payload.clients)) {
+                    const sortedClients = (data.payload.clients as Client[]).sort((a, b) => a.username.localeCompare(b.username));
                     clients.set(sortedClients);
                 }
                 break;
@@ -136,65 +161,75 @@ export const initControlSocket = (baseUrl: string) => {
 
     const getClients = () => {
         if (ws.readyState === WebSocket.OPEN)
-            ws.send(marshalControlEvent(ControlEventType.GET_CLIENTS, null));
+            ws.send(marshalControlEvent(ControlEventType.GET_CLIENTS, {}));
     }
 
     
     const setUsername = (username: string) => {
-        if (ws.readyState === WebSocket.OPEN)
-            ws.send(marshalControlEvent(ControlEventType.SET_USERNAME, username ?? localStorage.getItem('hc-username')));
+        if (username) {
+            myUsername.set(username);
+            localStorage.setItem("hc-username", username);
+
+            if (ws.readyState === WebSocket.OPEN)
+                ws.send(marshalControlEvent(ControlEventType.SET_USERNAME, {username}));
+        }
     }
 
 
     const newIndex = (index: number) => {
         if (ws.readyState === WebSocket.OPEN)
-            ws.send(marshalControlEvent(ControlEventType.NEW_INDEX, index));
+            ws.send(marshalControlEvent(ControlEventType.NEW_INDEX, {index}));
     }
 
     const getIndex = () => {
         if (ws.readyState === WebSocket.OPEN) {
-            console.log('requesting index...')
-            ws.send(marshalControlEvent(ControlEventType.GET_INDEX, null));
+            ws.send(marshalControlEvent(ControlEventType.GET_INDEX, {}));
         }
     }
 
     const newBeat = (beat: number) => {
         if (ws.readyState === WebSocket.OPEN)
-            ws.send(marshalControlEvent(ControlEventType.NEW_BEAT, beat));
+            ws.send(marshalControlEvent(ControlEventType.NEW_BEAT, {beat}));
     }
 
     const getBeat = () => {
         if (ws.readyState === WebSocket.OPEN) {
-            console.log('requesting beat...')
-            ws.send(marshalControlEvent(ControlEventType.GET_BEAT, null));
+            ws.send(marshalControlEvent(ControlEventType.GET_BEAT, {}));
+        }
+    }
+    
+    const newTimeSignature = (timeSignature: TimeSignature) => {
+        if (ws.readyState === WebSocket.OPEN && get(isLeader))
+            ws.send(marshalControlEvent(ControlEventType.NEW_TIME_SIGNATURE, {timeSignature}));
+    }
+
+    const getTimeSignature = () => {
+        if (ws.readyState === WebSocket.OPEN) {
+            ws.send(marshalControlEvent(ControlEventType.GET_TIME_SIGNATURE, {}));
         }
     }
 
     const newMainSequence = () => {
-        if (ws.readyState === WebSocket.OPEN) {
-            console.log('requesting main sequence...');
-            ws.send(marshalControlEvent(ControlEventType.NEW_MAIN_SEQUENCE, null));
+        if (ws.readyState === WebSocket.OPEN && get(isLeader)) {
+            ws.send(marshalControlEvent(ControlEventType.NEW_MAIN_SEQUENCE, {}));
         }
     }
 
     const getMainSequence = () => {
         if (ws.readyState === WebSocket.OPEN) {
-            console.log('requesting main sequence...');
-            ws.send(marshalControlEvent(ControlEventType.GET_MAIN_SEQUENCE, null));
+            ws.send(marshalControlEvent(ControlEventType.GET_MAIN_SEQUENCE, {}));
         }
     }
 
     const getLeader = () => {
         if (ws.readyState === WebSocket.OPEN) {
-            console.log('requesting leader...');
-            ws.send(marshalControlEvent(ControlEventType.GET_LEADER, null));
+            ws.send(marshalControlEvent(ControlEventType.GET_LEADER, {}));
         }
     }
 
-    const newLeader = (id: string) => {
+    const newLeader = (leaderId: string) => {
         if (ws.readyState === WebSocket.OPEN) {
-            console.log('requesting new leader...');
-            ws.send(marshalControlEvent(ControlEventType.NEW_LEADER, id));
+            ws.send(marshalControlEvent(ControlEventType.NEW_LEADER, {leaderId}));
         }
     }
 
@@ -210,6 +245,8 @@ export const initControlSocket = (baseUrl: string) => {
         newLeader,
         setUsername,
         getClients,
+        getTimeSignature,
+        newTimeSignature,
     };
 }
 

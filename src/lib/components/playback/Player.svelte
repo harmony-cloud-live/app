@@ -1,8 +1,10 @@
 <script lang="ts">
     import { controlSocket, midiSocket } from '$lib/ws';
+    import { togglePlayback, playbackLoop } from '$lib/tone';
     import {
         currentBeat,
         currentIndex,
+        previousIndex,
         isLeader,
         isPlaying,
         isSustaining,
@@ -37,20 +39,17 @@
     });
 
     const unsubCurrentIndex = currentIndex.subscribe((index) => {
-        if (!$isLeader) return;
-        if ($isPlaying || $isSustaining) {
-            $midiSocket.sendStopAll();
-        }
-
-        if (!$mainSequence[index]) {
+        if (!$isLeader || !$mainSequence[index]) 
             return;
-        }
 
-        if ($isPlaying || $isSustaining) {
+        if ($isPlaying) {
+            if ($mainSequence[$previousIndex])
+                $midiSocket.sendChordUp($previousIndex);
             $midiSocket.sendChordDown(index);
         }
 
         $controlSocket.newIndex(index);
+        $previousIndex = index;
     });
 
     onDestroy(() => {
@@ -58,66 +57,37 @@
         unsubCurrentIndex();
     });
 
-    const startPlayback = () => {
-        console.log('start playback');
-        $midiSocket.sendStopAll(); 
-        $midiSocket.sendChordDown($currentIndex); 
-
-        playbackLoop.start('1m');
-        Tone.Transport.start();
-
-        $controlSocket.newBeat(0);
-        $currentBeat = 0;
-        $isPlaying = true;
-    }
-
-    const stopPlayback = () => {
-        console.log('stop playback');
-        if (!$isSustaining) {
-            $midiSocket.sendStopAll(); 
-        }
-
-        playbackLoop.stop();
-        Tone.Transport.stop();
-
-        $controlSocket.newBeat(0);
-        $currentBeat = 0;
-        $isPlaying = false;
-    }
-
-    const togglePlayback = () => {
-        if (Tone.Transport.state === 'started') {
-            stopPlayback();
-        } else {
-            startPlayback();
-        }
-    }
-
-    const playbackLoop = new Tone.Loop(() => {
-        let nextIndex = $currentIndex < $mainSequence.length - 1 ? $currentIndex + 1 : 0;
-
-        if ($loopStart !== -1 && $loopEnd !== -1) {
-            if (nextIndex > $loopEnd) {
-                nextIndex = $loopStart;
-            }
-        }
-
-        $currentIndex = nextIndex;
-    }, '1n');
-
     const goToPreviousIndex = () => {
+        if (!$isLeader) return;
+        if (!$isPlaying && $isSustaining) {
+            $midiSocket.sendChordUp($previousIndex);
+        }
+
         if ($currentIndex > effectiveStart) {
             $currentIndex -= 1;
         } else {
             $currentIndex = effectiveEnd;
         }
+
+        if (!$isPlaying && $isSustaining) {
+            $midiSocket.sendChordDown($currentIndex);
+        }
     }
 
     const goToNextIndex = () => {
+        if (!$isLeader) return;
+        if (!$isPlaying && $isSustaining) {
+            $midiSocket.sendChordUp($previousIndex);
+        }
+
         if ($currentIndex < effectiveEnd) {
             $currentIndex += 1;
         } else {
             $currentIndex = effectiveStart;
+        }
+
+        if (!$isPlaying && $isSustaining) {
+            $midiSocket.sendChordDown($currentIndex);
         }
     }
 
@@ -129,7 +99,7 @@
     isLeader.subscribe((value) => {
         if (!value) {
             clearLoop();
-            playbackLoop.stop();
+            $playbackLoop.stop();
             Tone.Transport.stop();
         }
     });
