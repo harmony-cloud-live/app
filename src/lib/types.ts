@@ -18,6 +18,12 @@ export type ChordMessage = {
     chord: Chord;
 }
 
+export type ChordCollection = {
+    name: string;
+    key: string;
+    chords: Chord[];
+}
+
 export type Settings = {
     tempo: number;
     timeSignature: TimeSignature;
