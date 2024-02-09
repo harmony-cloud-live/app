@@ -1,19 +1,18 @@
-<script lang='ts'>
-    import type { Chord } from "$lib/types";
-    import { midiSocket } from "$lib/ws";
-    import { 
-        mainSequence, 
-        currentIndex, 
-        loopEnd, 
-        loopStart, 
-        dragging, 
-        isPlaying, 
+<script lang="ts">
+    import { controlSocket, midiSocket } from "$lib/ws";
+    import {
+        mainSequence,
+        currentIndex,
+        loopEnd,
+        loopStart,
+        dragging,
+        isPlaying,
         isSustaining,
         isLeader,
         previousIndex,
     } from "$lib/stores";
 
-    export let chord: Chord;
+    export let chord: string;
     export let index: number;
     export let isInLoop: boolean, isLoopStart: boolean, isLoopEnd: boolean;
     export let isCurrent: boolean;
@@ -23,7 +22,7 @@
         const length = $mainSequence.length;
         if (length <= 8) fontSize = 2;
         else if (length <= 16) fontSize = 1.5;
-        else if (length <= 24) fontSize = 1.25;
+        else if (length <= 24) fontSize = 1.35;
         else if (length <= 32) fontSize = 1;
         else if (length <= 64) fontSize = 0.75;
     };
@@ -39,13 +38,13 @@
         $loopStart = index;
         $loopEnd = -1;
         $dragging = true;
-    }
+    };
 
     const handleUp = () => {
         if (!$isPlaying && !$isSustaining) {
             $midiSocket.sendChordUp(index);
         }
-        
+
         if ($isSustaining) {
             $previousIndex = $currentIndex;
         }
@@ -56,7 +55,7 @@
         }
 
         $dragging = false;
-    }
+    };
 
     const handleMove = (event: PointerEvent) => {
         if (!$dragging || $loopStart === -1) return;
@@ -64,21 +63,22 @@
         const clientY = event.clientY;
 
         if (clientX === undefined || clientY === undefined) {
-            console.error('clientX or clientY is undefined', event);
+            console.error("clientX or clientY is undefined", event);
             return;
         }
 
         const hovered: Element | null = document.elementFromPoint(clientX, clientY);
         if (hovered === null) return;
 
-        const rawIndex: string | null = hovered.getAttribute('data-index');
+        const rawIndex: string | null = hovered.getAttribute("data-index");
         if (rawIndex === null) return;
 
         const index: number = parseInt(rawIndex);
-        if (typeof index === 'number' && index > $loopStart) {
-            $loopEnd = index; 
+        if (typeof index === "number" && index > $loopStart) {
+            $loopEnd = index;
+            $controlSocket.newLoop($loopStart, $loopEnd);
         }
-    }
+    };
 
     $: isListener = !$isLeader;
 </script>
@@ -110,7 +110,10 @@
         color: var(--color-text-1);
         cursor: pointer;
         outline: 3px transparent;
-        transition: outline-width .2s, outline-color .25s, border-radius 0.25s;
+        transition:
+            outline-width 0.2s,
+            outline-color 0.25s,
+            border-radius 0.25s;
         touch-action: none;
     }
 
@@ -124,7 +127,7 @@
             border-radius: 0.75em 1.75em 1.75em 0.75em;
         }
     }
-    
+
     button.isCurrent {
         background: linear-gradient(
             45deg,
@@ -136,7 +139,7 @@
         );
 
         &.isListener {
-	        background: linear-gradient(100deg, #00d2ff 0%, #3a47d5 100%);
+            background: linear-gradient(100deg, #00d2ff 0%, #3a47d5 100%);
         }
     }
 </style>

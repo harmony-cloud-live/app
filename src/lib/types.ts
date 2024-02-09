@@ -9,7 +9,9 @@ export enum PlaybackEventType {
     STOP_ALL = 2,
 }
 
-export type Chord = string; 
+export type Chord = {
+    chordSymbol: string;
+}; 
 
 export type TimeSignature = {
     upper: number;
@@ -32,5 +34,5 @@ export type ChordMessage = {
 export type ChordCollection = {
     name: string;
     key: string;
-    chords: Chord[];
+    chords: string[];
 }

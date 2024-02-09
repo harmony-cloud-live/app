@@ -2,14 +2,14 @@
     import { RefreshIcon } from "$lib/icons";
     import { isLeader } from "$lib/stores";
     import { controlSocket } from "$lib/ws";
-    import chordCollections from "$lib/data/default_chord_collections.json";
+    import chordCollections from "$lib/data/chords.json";
     import type { ChordCollection } from "$lib/types";
     
     const collections = chordCollections.map(c => {
         return {
             name: c.title,
             chords: c.chordSymbols,
-            key: c.description,
+            key: c.key,
         }
     });
     
@@ -22,10 +22,10 @@
         currentCollection.name !== selectedCollection.name;
 
     const handleClick = () => {
-        $controlSocket.newMainSequence(/*currentCollection*/);
         if (changed) {
             currentCollection = selectedCollection;
         }
+        $controlSocket.newMainSequence(currentCollection.name);
     }
 </script>
 

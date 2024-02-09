@@ -25,9 +25,19 @@
     import { fly, slide } from 'svelte/transition';
     import { cubicInOut, cubicOut } from 'svelte/easing';
 
+    let wasLooping = false;
     $: isLooping = $loopStart !== -1 && $loopEnd !== -1;
     $: effectiveEnd = isLooping ? $loopEnd : $mainSequence.length - 1;
     $: effectiveStart = isLooping ? $loopStart : 0;
+    $: if ($isLeader) {
+        if (wasLooping && !isLooping) {
+            wasLooping = false;
+            $controlSocket.newLoop($loopStart, $loopEnd);
+        } else if (!wasLooping && isLooping) {
+            wasLooping = true;
+            $controlSocket.newLoop($loopStart, $loopEnd);
+        }
+    }
 
     const unsubMainSequence = mainSequence.subscribe(() => {
         $currentIndex = 0;

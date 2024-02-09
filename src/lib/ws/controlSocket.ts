@@ -10,6 +10,8 @@ import {
     isPlaying,
     isSustaining,
     leaderId,
+    loopEnd,
+    loopStart,
     mainSequence,
     timeSignature
 } from '$lib/stores';
@@ -17,9 +19,10 @@ import {
 export type ControlSocket = WebSocket & { 
     newIndex: (index: number) => void,
     newBeat: (beat: number) => void,
-    newMainSequence: () => void,
+    newMainSequence: (songName: string) => void,
     newLeader: (id: string) => void,
     newTimeSignature: (timeSignature: TimeSignature) => void,
+    newLoop: (loopStart: number, loopEnd: number) => void,
     getIndex: () => void, 
     getBeat: () => void,
     getMainSequence: () => void,
@@ -27,6 +30,7 @@ export type ControlSocket = WebSocket & {
     setUsername: (username: string) => void,
     getClients: () => void,
     getTimeSignature: () => void,
+    getLoop: () => void,
 }; 
 
 export enum ControlEventType {
@@ -44,6 +48,8 @@ export enum ControlEventType {
     GET_CLIENTS = 11,
     GET_TIME_SIGNATURE = 12,
     NEW_TIME_SIGNATURE = 13,
+    GET_LOOP = 14,
+    NEW_LOOP = 15,
 }
 
 export type ControlPayload = {
@@ -54,6 +60,9 @@ export type ControlPayload = {
     leaderId?: string,
     username?: string,
     clients?: Client[],
+    songName?: string;
+    loopStart?: number;
+    loopEnd?: number;
 }
 
 export type ControlEvent = {
@@ -121,7 +130,7 @@ export const initControlSocket = (baseUrl: string) => {
             case ControlEventType.NEW_MAIN_SEQUENCE:
                 console.log('new main sequence', data.payload.chords);
                 if (Array.isArray(data.payload.chords) && data.payload.chords.length > 0)
-                    mainSequence.set(data.payload.chords as Chord[]);
+                    mainSequence.set(data.payload.chords.map(c => c.chordSymbol));
                 break;
             case ControlEventType.NEW_BEAT:
                 if (data.payload.beat !== undefined)
@@ -153,6 +162,12 @@ export const initControlSocket = (baseUrl: string) => {
                     clients.set(sortedClients);
                 }
                 break;
+            case ControlEventType.NEW_LOOP:
+                if (data.payload.loopStart !== undefined && data.payload.loopEnd !== undefined) {
+                    loopStart.set(data.payload.loopStart);
+                    loopEnd.set(data.payload.loopEnd);
+                }
+                break;
             default:
                 console.log('unknown control event type', data.type)
                 break;
@@ -174,7 +189,6 @@ export const initControlSocket = (baseUrl: string) => {
                 ws.send(marshalControlEvent(ControlEventType.SET_USERNAME, {username}));
         }
     }
-
 
     const newIndex = (index: number) => {
         if (ws.readyState === WebSocket.OPEN)
@@ -209,9 +223,9 @@ export const initControlSocket = (baseUrl: string) => {
         }
     }
 
-    const newMainSequence = () => {
+    const newMainSequence = (songName: string) => {
         if (ws.readyState === WebSocket.OPEN && get(isLeader)) {
-            ws.send(marshalControlEvent(ControlEventType.NEW_MAIN_SEQUENCE, {}));
+            ws.send(marshalControlEvent(ControlEventType.NEW_MAIN_SEQUENCE, {songName}));
         }
     }
 
@@ -232,6 +246,18 @@ export const initControlSocket = (baseUrl: string) => {
             ws.send(marshalControlEvent(ControlEventType.NEW_LEADER, {leaderId}));
         }
     }
+    
+    const getLoop = () => {
+        if (ws.readyState === WebSocket.OPEN) {
+            ws.send(marshalControlEvent(ControlEventType.GET_LOOP, {}));
+        }
+    }
+
+    const newLoop = (loopStart: number, loopEnd: number) => {
+        if (ws.readyState === WebSocket.OPEN && get(isLeader)) {
+            ws.send(marshalControlEvent(ControlEventType.NEW_LOOP, {loopStart, loopEnd}));
+        }
+    }
 
     return { 
         ...ws,
@@ -247,6 +273,8 @@ export const initControlSocket = (baseUrl: string) => {
         getClients,
         getTimeSignature,
         newTimeSignature,
+        getLoop,
+        newLoop,
     };
 }
 

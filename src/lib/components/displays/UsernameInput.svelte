@@ -1,12 +1,11 @@
 <script lang="ts">
     import { CancelIcon, ChevronRightIcon } from '$lib/icons';
-    import { controlSocket } from '$lib/ws';
+    import { controlSocket, myUsername } from '$lib/ws';
     import { fly } from 'svelte/transition';
 
-    export let submitted = false;
-
-    let username = '';
+    let username = $myUsername;
     let usernameError = false;
+    export let submitted = username.length > 0;
 
     const handleSubmit = () => {
         username = username.trim();

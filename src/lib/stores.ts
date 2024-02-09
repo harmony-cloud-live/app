@@ -1,8 +1,8 @@
 import { derived, writable } from 'svelte/store';
-import { type TimeSignature, type Chord, type Client } from './types';
+import { type TimeSignature, type Client } from './types';
 
 // primary state
-export const mainSequence = writable<Array<Chord>>([]);
+export const mainSequence = writable<Array<string>>([]);
 export const currentIndex = writable(0);
 export const previousIndex = writable(0);
 export const tempo = writable(60);
