@@ -2,9 +2,9 @@ import { writable } from "svelte/store";
 import { initMidiSocket, type MidiSocket } from "./midiSocket";
 import { initControlSocket, type ControlSocket } from "./controlSocket";
 
-const SOCKET_URL = import.meta.env['VITE_SOCKET_URL'];
-const MIDI_SOCKET_URL = `${SOCKET_URL}midi`;
-const CONTROL_SOCKET_URL = `${SOCKET_URL}control`;
+const SOCKET_URL = `ws://${window.location.hostname}:4000`;
+const MIDI_SOCKET_URL = new URL('/midi', SOCKET_URL).toString();
+const CONTROL_SOCKET_URL = new URL('/control', SOCKET_URL).toString();
 
 export const initializeUserId = () => {
     const userId = localStorage.getItem("hc-userId");
