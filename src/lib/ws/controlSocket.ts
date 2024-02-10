@@ -7,12 +7,14 @@ import {
     currentBeat,
     currentIndex,
     isLeader,
+    isLoadingMainSequence,
     isPlaying,
     isSustaining,
     leaderId,
     loopEnd,
     loopStart,
     mainSequence,
+    songName,
     timeSignature
 } from '$lib/stores';
 
@@ -31,6 +33,7 @@ export type ControlSocket = WebSocket & {
     getClients: () => void,
     getTimeSignature: () => void,
     getLoop: () => void,
+    getSongName: () => void,
 }; 
 
 export enum ControlEventType {
@@ -129,8 +132,13 @@ export const initControlSocket = (baseUrl: string) => {
                 break;
             case ControlEventType.NEW_MAIN_SEQUENCE:
                 console.log('new main sequence', data.payload.chords);
-                if (Array.isArray(data.payload.chords) && data.payload.chords.length > 0)
+                if (Array.isArray(data.payload.chords) && data.payload.chords.length > 0) {
                     mainSequence.set(data.payload.chords.map(c => c.chordSymbol));
+                    isLoadingMainSequence.set(false);
+                }
+                if (data.payload.songName !== undefined) {
+                    songName.set(data.payload.songName);
+                }
                 break;
             case ControlEventType.NEW_BEAT:
                 if (data.payload.beat !== undefined)
@@ -226,6 +234,7 @@ export const initControlSocket = (baseUrl: string) => {
     const newMainSequence = (songName: string) => {
         if (ws.readyState === WebSocket.OPEN && get(isLeader)) {
             ws.send(marshalControlEvent(ControlEventType.NEW_MAIN_SEQUENCE, {songName}));
+            isLoadingMainSequence.set(true);
         }
     }
 

@@ -1,9 +1,10 @@
 <script lang="ts">
     import { RefreshIcon } from "$lib/icons";
-    import { isLeader } from "$lib/stores";
+    import { isLeader, isLoadingMainSequence, songName } from "$lib/stores";
     import { controlSocket } from "$lib/ws";
     import chordCollections from "$lib/data/chords.json";
     import type { ChordCollection } from "$lib/types";
+    import { Moon } from "svelte-loading-spinners";
     
     const collections = chordCollections.map(c => {
         return {
@@ -20,11 +21,15 @@
     $: changed = currentCollection &&
         selectedCollection &&
         currentCollection.name !== selectedCollection.name;
+        
+    songName.subscribe($songName => {
+        selectedCollection = collections.find(c => c.name === $songName) ?? selectedCollection;
+        currentCollection = selectedCollection;
+    })
 
     const handleClick = () => {
-        if (changed) {
-            currentCollection = selectedCollection;
-        }
+        if ($isLoadingMainSequence) return;
+        if (changed) currentCollection = selectedCollection;
         $controlSocket.newMainSequence(currentCollection.name);
     }
 </script>
@@ -32,7 +37,11 @@
 <div class="container" class:hidden>
     <div class="refresh-wrapper" class:changed>
         <button class="refresh" on:click={handleClick}>
-            <img src={RefreshIcon} alt="Refresh" />
+            {#if $isLoadingMainSequence}
+                <Moon color="#fff" duration="1s" size={25}/>
+            {:else}
+                <img src={RefreshIcon} alt="Refresh"/>
+            {/if}
         </button>
     </div>
     <div class="dropdown">

@@ -1,10 +1,10 @@
-<script lang='ts'>
-    import { onMount, onDestroy } from 'svelte';
-    import { controlSocket, midiSocketReady } from '$lib/stores';
-    import { Circle3 } from 'svelte-loading-spinners';
-    import { ChevronRightIcon } from '$lib/icons';
-    import { fly } from 'svelte/transition';
-    import { initTone } from '$lib/tone';
+<script lang="ts">
+    import { onMount, onDestroy } from "svelte";
+    import { controlSocket, midiSocketReady } from "$lib/stores";
+    import { Circle3 } from "svelte-loading-spinners";
+    import { ChevronRightIcon } from "$lib/icons";
+    import { fly } from "svelte/transition";
+    import { initTone } from "$lib/tone";
     
     let timeout: any;
     let timedOut = false;
@@ -36,14 +36,14 @@
 </script>
 
 
-<button in:fly class={($midiSocketReady ? 'green' : 'yellow') + '-gradient'} on:click={handleClick}>
+<button in:fly class={($midiSocketReady ? "green" : "yellow") + "-gradient"} on:click={handleClick}>
     {#if $midiSocketReady}
-        <span class='status'>
+        <span class="status">
             START
-            <img src={ChevronRightIcon} alt='check' width='25' /> 
+            <img src={ChevronRightIcon} alt="check" width="25" /> 
         </span>
     {:else}
-        <span class='status'>
+        <span class="status">
             {#if reload}
                 retry?
             {:else}
@@ -54,7 +54,7 @@
                 ballTopRight="white"
                 ballBottomLeft="white"
                 ballBottomRight="white"
-                duration='1.5s'
+                duration="1.5s"
                 size={30}
             />
         </span>

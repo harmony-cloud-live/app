@@ -3,6 +3,8 @@ import { type TimeSignature, type Client } from './types';
 
 // primary state
 export const mainSequence = writable<Array<string>>([]);
+export const songName = writable('');
+export const isLoadingMainSequence = writable(false);
 export const currentIndex = writable(0);
 export const previousIndex = writable(0);
 export const tempo = writable(60);
