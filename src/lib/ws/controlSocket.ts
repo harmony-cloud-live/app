@@ -160,7 +160,7 @@ export const initControlSocket = (baseUrl: string) => {
                         isLeader.set(false);
                         leaderId.set(data.payload.leaderId);
                         isPlaying.set(false);
-                        isSustaining.set(false);
+                        isSustaining.set(true);
                     }
                 }
                 break;

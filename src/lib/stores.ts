@@ -41,7 +41,7 @@ export const isReady = derived(
 // playback
 export const isPlaying = writable(false);
 export const currentBeat = writable(0);
-export const isSustaining = writable(false);
+export const isSustaining = writable(true);
 
 // handles loop selection logic
 export const dragging = writable(false);
