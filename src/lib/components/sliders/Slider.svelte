@@ -200,15 +200,9 @@
         outline: none;
     }
 
-    .range__wrapper:focus-visible > .range__track {
-        box-shadow:
-            0 0 0 2px white,
-            0 0 0 3px var(--track-focus, #6185ff);
-    }
-
     .range__track {
         height: 8px;
-        background-color: var(--track-bgcolor, #d0d0d0);
+        background-color: var(--track-bgcolor, #252525);
         border-radius: 999px;
     }
 
@@ -243,17 +237,17 @@
         box-shadow:
             0 1px 1px 0 rgba(0, 0, 0, 0.14),
             0 1px 2px 1px rgba(0, 0, 0, 0.2),
-            0 0 0 6px var(--thumb-holding-outline, rgba(255, 168, 142, 0.3));
+            0 0 0 6px var(--thumb-holding-outline, rgba(255, 255, 255, 0.3));
     }
 
     .range__tooltip {
         pointer-events: none;
         position: absolute;
-        top: -33px;
+        top: -42px;
         color: var(--tooltip-text, white);
-        width: 38px;
+        width: 44px;
         padding: 4px 0;
-        border-radius: 4px;
+        border-radius: 5px;
         text-align: center;
         background: linear-gradient(
             45deg,
@@ -262,6 +256,7 @@
             #dc2743 60%,
             #cc2366 75%
         );
+        font-size: 1em;
     }
 
     .range__tooltip::after {
@@ -276,7 +271,7 @@
             #dc2743 100%
         );
         bottom: -4px;
-        left: calc(50% - 3px);
+        left: calc(50% - 4px);
         clip-path: polygon(0% 0%, 100% 100%, 0% 100%);
         transform: rotate(-45deg);
         border-radius: 0 0 0 3px;

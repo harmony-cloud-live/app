@@ -4,7 +4,7 @@
     export let title = "";
     export let initialValue = 0;
     export let min = 0;
-    export let max = 127;
+    export let max = 100;
     export let onChange: (e: CustomEvent<number>) => void;
 </script>
 
