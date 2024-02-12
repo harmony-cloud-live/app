@@ -28,7 +28,7 @@
 
 <svelte:window on:pointerup={handlePointerUp} />
 
-<div class="container fixed-center" class:inactive>
+<div class="container" class:inactive>
     {#each $clients as client (client.userId)}
     <div class="client-wrapper" 
         class:expanded={expandedId === client.userId && client.userId !== $leaderId}
@@ -69,9 +69,9 @@
         display: flex;
         justify-content: center;
         align-items: center;
-        gap: 2em;
-        max-width: 80%;
-        padding: 1em;
+        gap: 1em;
+        max-width: 100%;
+        padding: .25em;
     }
 
     .client-wrapper {
@@ -81,8 +81,8 @@
     
     .client {
         position: relative;
-        padding: 1.5em;
-        font-size: 1.25em;
+        padding: 1.25em;
+        font-size: 1em;
         font-weight: 700;
         text-transform: uppercase;
         letter-spacing: 0.1em;

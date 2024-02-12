@@ -11,6 +11,7 @@ export { default as Player } from './playback/Player.svelte';
 export { default as SustainPedal } from './playback/SustainPedal.svelte';
 export { default as TempoControl } from './tempo/TempoControl.svelte';
 export { default as IncrementDecrement } from './tempo/IncrementDecrement.svelte';
+export { default as SliderWrapper } from './sliders/SliderWrapper.svelte';
 
 export { default as Header } from './Header.svelte';
 export { default as Footer } from './Footer.svelte';

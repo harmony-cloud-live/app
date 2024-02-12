@@ -3,7 +3,7 @@ import { type TimeSignature, type Client } from './types';
 
 // primary state
 export const mainSequence = writable<Array<string>>([]);
-export const songName = writable('');
+export const songTitle = writable('');
 export const isLoadingMainSequence = writable(false);
 export const currentIndex = writable(0);
 export const previousIndex = writable(0);
@@ -42,6 +42,8 @@ export const isReady = derived(
 export const isPlaying = writable(false);
 export const currentBeat = writable(0);
 export const isSustaining = writable(true);
+export const noteDelay = writable(0);
+export const velocity = writable(64);
 
 // handles loop selection logic
 export const dragging = writable(false);

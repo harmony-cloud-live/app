@@ -39,6 +39,6 @@
         justify-content: center;
         flex-wrap: wrap;
         gap: .5em;
-        max-width: 85%;
+        max-width: 95%;
     }
 </style>

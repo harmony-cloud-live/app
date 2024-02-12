@@ -1,6 +1,5 @@
 <script lang='ts'>
     import {
-        BeatDisplay,
         ChordButtons,
         ChordDisplay,
         Player
@@ -9,7 +8,6 @@
 
 <section>
     <ChordDisplay />
-    <Player />
-    <BeatDisplay />
     <ChordButtons />
+    <Player />
 </section>

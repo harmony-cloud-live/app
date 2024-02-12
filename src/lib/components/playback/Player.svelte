@@ -1,6 +1,6 @@
 <script lang="ts">
     import { controlSocket, midiSocket } from '$lib/ws';
-    import { togglePlayback, playbackLoop } from '$lib/tone';
+    import { togglePlayback, playbackLoop, stopPlayback } from '$lib/tone';
     import {
         currentBeat,
         currentIndex,
@@ -21,6 +21,7 @@
         ExitLoopIcon,
         PauseIcon,
         PlayIcon,
+        StopIcon,
     } from '$lib/icons';
     import { fly, slide } from 'svelte/transition';
     import { cubicInOut, cubicOut } from 'svelte/easing';
@@ -45,7 +46,6 @@
         $loopStart = -1;
         $loopEnd = -1;
         if (!$isLeader) return;
-        $midiSocket.sendStopAll();
     });
 
     const unsubCurrentIndex = currentIndex.subscribe((index) => {
@@ -116,18 +116,24 @@
 </script>
 
 {#if $isLeader}
-    <div class="container" transition:fly={{ y: -100, duration: 125, easing: cubicInOut }}>
-        <button on:click={goToPreviousIndex}>
+    <div class="container" transition:fly={{ y: -50, duration: 200, easing: cubicInOut }}>
+        <button on:pointerdown|preventDefault={goToPreviousIndex}>
             <img src={ChevronLeftIcon} alt="previous" />
         </button>
         {#if $looping}
             <button
                 class="clear"
-                on:click={clearLoop}
+                on:pointerdown|preventDefault={clearLoop}
                 transition:slide={{ axis: 'x', easing: cubicOut, duration: 200 }}>
                 <img src={ExitLoopIcon} alt="exit loop" />
             </button>
         {/if}
+        <button on:pointerdown|preventDefault={() => {
+            stopPlayback();
+            $midiSocket.sendStopAll()
+        }}>
+            <img src={StopIcon} alt="stop" />
+        </button>
         <button on:click={togglePlayback}>
             {#if $isPlaying}
                 <img src={PauseIcon} alt="pause" />
@@ -135,7 +141,7 @@
                 <img class="play" src={PlayIcon} alt="play" />
             {/if}
         </button>
-        <button on:click={goToNextIndex}>
+        <button on:pointerdown|preventDefault={goToNextIndex}>
             <img src={ChevronRightIcon} alt="next" />
         </button>
     </div>
@@ -152,8 +158,8 @@
     }
 
     button {
-        width: 5em;
-        height: 5em;
+        width: 6em;
+        height: 6em;
         background: rgb(24, 24, 24);
         border-radius: 1em;
         border: 0;
@@ -165,6 +171,7 @@
         align-items: center;
         margin: 0 .5em;
         outline: .15em transparent;
+        font-size: 1.2em;
 
         &:active {
             filter: brightness(2);
@@ -173,8 +180,8 @@
     }
 
     .clear {
-        width: 7em;
-        height: 5em;
+        width: 8em;
+        height: 6em;
         white-space: pre;
         font-weight: 300;
         & img {

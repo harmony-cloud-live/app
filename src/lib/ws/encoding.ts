@@ -1,6 +1,5 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { PlaybackEventType } from "$lib/types";
-import type { ControlEvent, ControlEventType, ControlPayload } from "./controlSocket";
+import type { ControlEvent, ControlEventType, ControlPayload } from "$lib/types";
 
 const encoder = new TextEncoder();
 const decoder = new TextDecoder();
@@ -46,12 +45,13 @@ export const unmarshalControlEvent = (buffer: ArrayBuffer): ControlEvent | null 
         return null;
     }
 
-    let payload: any;
+    let payload: ControlPayload;
     try {
         payload = JSON.parse(decoder.decode(data.subarray(idx, idx + payloadLength)));
+        return { type: eventType, payload };
     } catch (e) {
         console.log('unmarshal: failed to parse payload type', eventType, e, buffer);
     }
 
-    return { type: eventType, payload };
+    return null;
 }

@@ -1,6 +1,7 @@
 import { writable } from "svelte/store";
-import { initMidiSocket, type MidiSocket } from "./midiSocket";
-import { initControlSocket, type ControlSocket } from "./controlSocket";
+import { initMidiSocket } from "./midiSocket";
+import { initControlSocket } from "./controlSocket";
+import type { ControlSocket, MidiSocket } from "$lib/types";
 
 const SOCKET_URL = `ws://${window.location.hostname}:4000`;
 const MIDI_SOCKET_URL = new URL('/midi', SOCKET_URL).toString();
@@ -21,7 +22,8 @@ export const myUserId = writable(initializeUserId());
 export const myUsername = writable(localStorage.getItem('hc-username') || '');
 
 export const controlSocket = writable<ControlSocket>(initControlSocket(CONTROL_SOCKET_URL));
-export { controlSocketReady } from './controlSocket';
+export const controlSocketReady = writable(false);
 
 export const midiSocket = writable<MidiSocket>(initMidiSocket(MIDI_SOCKET_URL));
-export { midiSocketReady } from './midiSocket';
+export const midiSocketReady = writable(false);
+

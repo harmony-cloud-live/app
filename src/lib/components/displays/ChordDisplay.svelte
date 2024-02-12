@@ -49,12 +49,12 @@
         width: 15em;
         text-align: center;
         white-space: pre;
-        font-size: 1.5em;
+        font-size: 1.25em;
     }
     
     .current {
         width: 30em;
-        font-size: 3em;
+        font-size: 2.5em;
         font-weight: 700;
     }
 </style>

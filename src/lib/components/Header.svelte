@@ -1,8 +1,8 @@
 <script>
     import {
         LeaderDisplay,
-        TimeSignatureDisplay,
-        ChordCollectionDisplay
+        ChordCollectionDisplay,
+        ClientDisplay
     } from '$lib/components';
 </script>
 
@@ -12,7 +12,7 @@
     </div>
     <LeaderDisplay />
     <div>
-        <TimeSignatureDisplay />
+        <ClientDisplay />
     </div>
 </header>
 

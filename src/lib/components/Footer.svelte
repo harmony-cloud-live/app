@@ -2,13 +2,25 @@
     import {
         TempoControl,
         SustainPedal,
-        ClientDisplay,
+        SliderWrapper,
     } from '$lib/components';
+    import { velocity, noteDelay } from '$lib/stores';
+    import { controlSocket } from '$lib/ws';
+
+    const setNoteDelay = (e: CustomEvent<number>) => {
+        $controlSocket.setNoteDelay(e.detail);
+    };
+
+    const setVelocity = (e: CustomEvent<number>) => {
+        $controlSocket.setVelocity(e.detail);
+    };
 </script>
+
 
 <footer>
     <TempoControl />
-    <ClientDisplay />
+    <SliderWrapper title="ARP" onChange={setNoteDelay} initialValue={$noteDelay} />
+    <SliderWrapper title="VOL" onChange={setVelocity} initialValue={$velocity} />
     <SustainPedal />
 </footer>
 

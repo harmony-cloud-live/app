@@ -1,7 +1,7 @@
-import { get, writable } from 'svelte/store';
+import { get } from 'svelte/store';
 import { marshalControlEvent, unmarshalControlEvent } from './encoding';
-import { controlSocket, myUserId, myUsername } from '.';
-import type { Chord, Client, TimeSignature } from '$lib/types';
+import { controlSocket, controlSocketReady, myUserId, myUsername } from '.';
+import { ControlEventType, type Client, type TimeSignature, type ControlSocket } from '$lib/types';
 import {
     clients,
     currentBeat,
@@ -14,66 +14,11 @@ import {
     loopEnd,
     loopStart,
     mainSequence,
-    songName,
-    timeSignature
+    noteDelay,
+    songTitle,
+    timeSignature,
+    velocity
 } from '$lib/stores';
-
-export type ControlSocket = WebSocket & { 
-    newIndex: (index: number) => void,
-    newBeat: (beat: number) => void,
-    newMainSequence: (songName: string) => void,
-    newLeader: (id: string) => void,
-    newTimeSignature: (timeSignature: TimeSignature) => void,
-    newLoop: (loopStart: number, loopEnd: number) => void,
-    getIndex: () => void, 
-    getBeat: () => void,
-    getMainSequence: () => void,
-    getLeader: () => void,
-    setUsername: (username: string) => void,
-    getClients: () => void,
-    getTimeSignature: () => void,
-    getLoop: () => void,
-    getSongName: () => void,
-}; 
-
-export enum ControlEventType {
-    GET_INDEX = 0,
-    NEW_INDEX = 1,
-    GET_BEAT = 2,
-    NEW_BEAT = 3,
-    GET_MAIN_SEQUENCE = 4,
-    NEW_MAIN_SEQUENCE = 5,
-    GET_SETTINGS = 6,
-    NEW_SETTINGS = 7,
-    GET_LEADER = 8,
-    NEW_LEADER = 9,
-    SET_USERNAME = 10,
-    GET_CLIENTS = 11,
-    GET_TIME_SIGNATURE = 12,
-    NEW_TIME_SIGNATURE = 13,
-    GET_LOOP = 14,
-    NEW_LOOP = 15,
-}
-
-export type ControlPayload = {
-    index?: number,
-    beat?: number,
-    chords?: Chord[],
-    timeSignature?: TimeSignature,
-    leaderId?: string,
-    username?: string,
-    clients?: Client[],
-    songName?: string;
-    loopStart?: number;
-    loopEnd?: number;
-}
-
-export type ControlEvent = {
-    type: ControlEventType,
-    payload: ControlPayload,
-}
-
-export const controlSocketReady = writable(false);
 
 export const initControlSocket = (baseUrl: string) => {
     console.log('initializing control socket...', baseUrl);
@@ -136,19 +81,16 @@ export const initControlSocket = (baseUrl: string) => {
                     mainSequence.set(data.payload.chords.map(c => c.chordSymbol));
                     isLoadingMainSequence.set(false);
                 }
-                if (data.payload.songName !== undefined) {
-                    songName.set(data.payload.songName);
-                }
+                if (data.payload.songTitle !== undefined)
+                    songTitle.set(data.payload.songTitle);
                 break;
             case ControlEventType.NEW_BEAT:
                 if (data.payload.beat !== undefined)
                     currentBeat.set(data.payload.beat);
                 break;
             case ControlEventType.NEW_TIME_SIGNATURE:
-                console.log('received time signature', data.payload.timeSignature as TimeSignature)
-                if (data.payload.timeSignature !== undefined) {
+                if (data.payload.timeSignature !== undefined)
                     timeSignature.set(data.payload.timeSignature as TimeSignature);
-                }
                 break;
             case ControlEventType.NEW_LEADER:
             case ControlEventType.GET_LEADER:
@@ -175,6 +117,14 @@ export const initControlSocket = (baseUrl: string) => {
                     loopStart.set(data.payload.loopStart);
                     loopEnd.set(data.payload.loopEnd);
                 }
+                break;
+            case ControlEventType.GET_NOTE_DELAY:
+                if (data.payload.noteDelay !== undefined)
+                    noteDelay.set(data.payload.noteDelay);
+                break;
+            case ControlEventType.GET_VELOCITY:
+                if (data.payload.velocity !== undefined)
+                    velocity.set(data.payload.velocity);
                 break;
             default:
                 console.log('unknown control event type', data.type)
@@ -231,9 +181,9 @@ export const initControlSocket = (baseUrl: string) => {
         }
     }
 
-    const newMainSequence = (songName: string) => {
+    const newMainSequence = (songTitle: string) => {
         if (ws.readyState === WebSocket.OPEN && get(isLeader)) {
-            ws.send(marshalControlEvent(ControlEventType.NEW_MAIN_SEQUENCE, {songName}));
+            ws.send(marshalControlEvent(ControlEventType.NEW_MAIN_SEQUENCE, {songTitle}));
             isLoadingMainSequence.set(true);
         }
     }
@@ -267,6 +217,30 @@ export const initControlSocket = (baseUrl: string) => {
             ws.send(marshalControlEvent(ControlEventType.NEW_LOOP, {loopStart, loopEnd}));
         }
     }
+    
+    const getNoteDelay = () => {
+        if (ws.readyState === WebSocket.OPEN) {
+            ws.send(marshalControlEvent(ControlEventType.GET_NOTE_DELAY, {}));
+        }
+    }
+    
+    const setNoteDelay = (noteDelay: number) => {
+        if (ws.readyState === WebSocket.OPEN && get(isLeader)) {
+            ws.send(marshalControlEvent(ControlEventType.SET_NOTE_DELAY, {noteDelay}));
+        }
+    }
+    
+    const getVelocity = () => {
+        if (ws.readyState === WebSocket.OPEN) {
+            ws.send(marshalControlEvent(ControlEventType.GET_VELOCITY, {}));
+        }
+    }
+
+    const setVelocity = (velocity: number) => {
+        if (ws.readyState === WebSocket.OPEN && get(isLeader)) {
+            ws.send(marshalControlEvent(ControlEventType.SET_VELOCITY, {velocity}));
+        }
+    }
 
     return { 
         ...ws,
@@ -284,6 +258,10 @@ export const initControlSocket = (baseUrl: string) => {
         newTimeSignature,
         getLoop,
         newLoop,
+        getNoteDelay,
+        setNoteDelay,
+        getVelocity,
+        setVelocity,
     };
 }
 

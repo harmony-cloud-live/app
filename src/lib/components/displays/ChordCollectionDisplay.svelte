@@ -1,6 +1,6 @@
 <script lang="ts">
     import { RefreshIcon } from "$lib/icons";
-    import { isLeader, isLoadingMainSequence, songName } from "$lib/stores";
+    import { isLeader, isLoadingMainSequence, songTitle } from "$lib/stores";
     import { controlSocket } from "$lib/ws";
     import chordCollections from "$lib/data/chords.json";
     import type { ChordCollection } from "$lib/types";
@@ -22,8 +22,8 @@
         selectedCollection &&
         currentCollection.name !== selectedCollection.name;
         
-    songName.subscribe($songName => {
-        selectedCollection = collections.find(c => c.name === $songName) ?? selectedCollection;
+    songTitle.subscribe($songTitle => {
+        selectedCollection = collections.find(c => c.name === $songTitle) ?? selectedCollection;
         currentCollection = selectedCollection;
     })
 

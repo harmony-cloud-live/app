@@ -1,15 +1,7 @@
-import { get, writable } from 'svelte/store';
-import { PlaybackEventType } from '$lib/types';
+import { get } from 'svelte/store';
+import { PlaybackEventType, type MidiSocket } from '$lib/types';
 import { marshalMidi } from './encoding';
-import { midiSocket, myUserId } from '.';
-
-export type MidiSocket = WebSocket & {
-    sendStopAll: () => void,
-    sendChordDown: (index: number) => void,
-    sendChordUp: (index: number) => void,
-};
-
-export const midiSocketReady = writable(false);
+import { midiSocket, midiSocketReady, myUserId } from '.';
 
 export const initMidiSocket = (baseUrl: string) => {
     console.log('initializing midi socket...', baseUrl);
