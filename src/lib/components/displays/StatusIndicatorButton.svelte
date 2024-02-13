@@ -22,6 +22,8 @@
         $controlSocket.getBeat();
         $controlSocket.getClients();
         $controlSocket.getTimeSignature();
+        $controlSocket.getNoteDelay();
+        $controlSocket.getVelocity();
     };
 
     onMount(() => {

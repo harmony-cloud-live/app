@@ -10,10 +10,12 @@
     import { fly } from 'svelte/transition';
 
     const setNoteDelay = (e: CustomEvent<number>) => {
+        $noteDelay = e.detail;
         $controlSocket.setNoteDelay(e.detail);
     };
 
     const setVelocity = (e: CustomEvent<number>) => {
+        $velocity = e.detail;
         $controlSocket.setVelocity(e.detail);
     };
 </script>

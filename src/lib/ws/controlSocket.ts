@@ -49,6 +49,8 @@ export const initControlSocket = (baseUrl: string) => {
             cs.getIndex();
             cs.getBeat();
             cs.getTimeSignature();
+            cs.getNoteDelay();
+            cs.getVelocity();
         }
     }
 
