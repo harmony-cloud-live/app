@@ -4,8 +4,10 @@
         SustainPedal,
         SliderWrapper,
     } from '$lib/components';
-    import { velocity, noteDelay } from '$lib/stores';
+    import { velocity, noteDelay, isLeader } from '$lib/stores';
     import { controlSocket } from '$lib/ws';
+    import { cubicInOut } from 'svelte/easing';
+    import { fly } from 'svelte/transition';
 
     const setNoteDelay = (e: CustomEvent<number>) => {
         $controlSocket.setNoteDelay(e.detail);
@@ -17,12 +19,14 @@
 </script>
 
 
-<footer>
-    <TempoControl />
-    <SliderWrapper title="ARP" onChange={setNoteDelay} initialValue={$noteDelay} />
-    <SliderWrapper title="VOL" onChange={setVelocity} initialValue={$velocity} />
-    <SustainPedal />
-</footer>
+{#if $isLeader}
+    <footer transition:fly={{y: 50, duration: 150, easing: cubicInOut}}>
+        <TempoControl />
+        <SliderWrapper title="ARP" onChange={setNoteDelay} initialValue={$noteDelay} />
+        <SliderWrapper title="VOL" onChange={setVelocity} initialValue={$velocity} />
+        <SustainPedal />
+    </footer>
+{/if}
 
 <style>
     footer {

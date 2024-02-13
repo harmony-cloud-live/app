@@ -116,7 +116,7 @@
 </script>
 
 {#if $isLeader}
-    <div class="container" transition:fly={{ y: -50, duration: 200, easing: cubicInOut }}>
+    <div class="container" transition:fly={{ y: -50, duration: 150, easing: cubicInOut }}>
         <button on:pointerdown|preventDefault={goToPreviousIndex}>
             <img src={ChevronLeftIcon} alt="previous" />
         </button>
@@ -129,7 +129,6 @@
             </button>
         {/if}
         <button on:pointerdown|preventDefault={() => {
-            stopPlayback();
             $midiSocket.sendStopAll()
         }}>
             <img src={StopIcon} alt="stop" />

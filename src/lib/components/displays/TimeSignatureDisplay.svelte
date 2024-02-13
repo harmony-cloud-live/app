@@ -64,7 +64,6 @@ import { controlSocket, isLeader, timeSignature } from '$lib/stores';
         align-items: flex-start;
         gap: .5em;
         height: 100%;
-        transition: .2s all;
     }
     
     button {
@@ -80,10 +79,6 @@ import { controlSocket, isLeader, timeSignature } from '$lib/stores';
     
     button > div:first-child {
         border-bottom: 1px solid white;
-    }
-    
-    .hidden {
-        margin-top: -5em;
     }
     
     button.confirm {

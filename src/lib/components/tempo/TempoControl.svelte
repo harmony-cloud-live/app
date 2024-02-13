@@ -15,7 +15,7 @@
     }
 </script>
 
-<div class='container' class:hidden>
+<div class='container'>
     <div class='expand-button' on:pointerdown={() => expanded = !expanded}>
         <img src={expanded ? ChevronDownIcon : ChevronUpIcon } alt='expand' width='20' />
     </div>
@@ -68,10 +68,6 @@
         &.down {
             background-color: #4d4d4d;
         }
-    }
-    
-    .hidden {
-        margin-bottom: -5em;
     }
 </style>
 
