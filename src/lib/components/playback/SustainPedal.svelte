@@ -27,15 +27,15 @@
         flex-wrap: wrap;
         gap: .5em;
         max-width: 80%;
-        border-radius: 2.5em;
+        border-radius: 2.75em;
         padding: .25em;
-        height: 4.5em;
+        height: 5em;
     }
 
     button {
         width: 8em;
         font-weight: 700;
-        font-size: 1.5rem;
+        font-size: 1.75rem;
         text-transform: uppercase;
         letter-spacing: 0.1em;
         text-decoration: none;

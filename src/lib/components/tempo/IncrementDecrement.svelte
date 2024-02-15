@@ -33,12 +33,13 @@
 </script>
 
 <div class='controls' transition:slide={{ duration: 200, easing: quintOut }}>
-    <button class:longPressActive
+    <button class="left" class:longPressActive
         on:pointerdown|preventDefault|stopPropagation={() => handleDown(-1)}
         on:pointerup|preventDefault|stopPropagation={handleUp}>
         -
     </button>
-    <button class:longPressActive
+    <slot></slot>
+    <button class="right" class:longPressActive
         on:pointerdown|preventDefault|stopPropagation={() => handleDown(1)}
         on:pointerup|preventDefault|stopPropagation={handleUp}>
         +
@@ -47,22 +48,29 @@
 
 
 <style>
+    .left {
+        margin-right: -3em;
+        padding-right: 3.5em;
+    }
+    .right {
+        margin-left: -3em;
+        padding-left: 3.5em;
+    }
     button {
         display: flex;
         justify-content: center;
         align-items: center;
-        width: 3em;
-        height: 3em;
-        font-size: 2em;
+        width: 6em;
+        height: 3.34em;
+        font-size: 1.5em;
         font-weight: 700;
-        border-radius: 1em;
-        background-color: rgb(39, 39, 39);
+        border-radius: 2em;
+        background-color: #1a1a1a;
         border: none;
         outline: none;
 
         &:active {
-            background-color: #1a1a1a;
-            outline: white solid .11em;
+            background-color: #252525; 
 
             &.longPressActive {
                 background-color: #393939; 
@@ -75,8 +83,6 @@
         flex-direction: row;
         justify-content: center;
         align-items: center;
-        gap: 1em;
-        margin-top: 1em;
     }
 </style>
 
