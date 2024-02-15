@@ -5,14 +5,18 @@
         ChordCollectionDisplay,
         ClientDisplay
     } from '$lib/components';
+    import { isLeader } from '$lib/stores';
 </script>
 
 <header>
     <div>
         <ChordCollectionDisplay />
     </div>
-    <LeaderDisplay />
-    <ToggleAI />
+    {#if $isLeader}
+        <ToggleAI />
+    {:else}
+        <LeaderDisplay />
+    {/if}
     <div>
         <ClientDisplay />
     </div>

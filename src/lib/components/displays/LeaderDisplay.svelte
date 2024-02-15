@@ -28,18 +28,16 @@
 
 <svelte:window on:pointerup={handlePointerUp} />
 
-{#if !$isLeader}
-    <div class="container fixed-center" class:isExpanded 
-        transition:fly={{ y: -100, duration: 250, easing: cubicInOut }}>
-        <button class="leader" on:click={handleClick}>
-            {#if isExpanded}
-                <span class="bold">take lead?</span>
-            {:else}
-                <span><span class="bold">{leaderUsername ?? "no one"}</span> is lead</span>
-            {/if}
-        </button>
-    </div>
-{/if}
+<div class="container fixed-center" class:isExpanded 
+    transition:fly={{ y: -100, duration: 250, easing: cubicInOut }}>
+    <button class="leader" on:click={handleClick}>
+        {#if isExpanded}
+            <span class="bold">take lead?</span>
+        {:else}
+            <span><span class="bold">{leaderUsername ?? "no one"}</span> is lead</span>
+        {/if}
+    </button>
+</div>
 
 <style>
     .container {
