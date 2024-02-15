@@ -1,14 +1,13 @@
 import { derived, writable } from 'svelte/store';
-import { type TimeSignature, type Client } from './types';
+import { type TimeSignature, type Client, type ChordCollection } from './types';
 
 // primary state
 export const mainSequence = writable<Array<string>>([]);
 export const songTitle = writable('');
 export const isLoadingMainSequence = writable(false);
-export const currentIndex = writable(0);
-export const previousIndex = writable(0);
-export const tempo = writable(60);
-export const timeSignature = writable<TimeSignature>({ upper: 4, lower: 4 });
+export const aiMode = writable(true);
+export const chordCollection = writable<ChordCollection>();
+export const manualModeIndex = writable(-1);
 
 // sockets
 import { midiSocketReady, controlSocketReady } from './ws';
@@ -44,6 +43,10 @@ export const currentBeat = writable(0);
 export const isSustaining = writable(true);
 export const noteDelay = writable(0);
 export const velocity = writable(64);
+export const currentIndex = writable(0);
+export const previousIndex = writable(0);
+export const tempo = writable(60);
+export const timeSignature = writable<TimeSignature>({ upper: 4, lower: 4 });
 
 // handles loop selection logic
 export const dragging = writable(false);

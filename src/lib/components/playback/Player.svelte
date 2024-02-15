@@ -129,7 +129,12 @@
             </button>
         {/if}
         <button on:pointerdown|preventDefault={() => {
-            $midiSocket.sendStopAll()
+            $midiSocket.sendStopAll();
+            $playbackLoop.stop();
+            Tone.Transport.stop();
+            $isPlaying = false;
+            $currentBeat = 0;
+            $controlSocket.newBeat(0);
         }}>
             <img src={StopIcon} alt="stop" />
         </button>
@@ -160,7 +165,7 @@
         width: 6em;
         height: 6em;
         background: rgb(24, 24, 24);
-        border-radius: 1em;
+        border-radius: 2em;
         border: 0;
         color: white;
         padding: 1em;

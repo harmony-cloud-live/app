@@ -1,6 +1,6 @@
 <script lang="ts">
     import { RefreshIcon } from "$lib/icons";
-    import { isLeader, isLoadingMainSequence, songTitle } from "$lib/stores";
+    import { isLeader, isLoadingMainSequence, songTitle, chordCollection, aiMode } from "$lib/stores";
     import { controlSocket } from "$lib/ws";
     import chordCollections from "$lib/data/chords.json";
     import type { ChordCollection } from "$lib/types";
@@ -15,28 +15,29 @@
     });
     
     let selectedCollection: ChordCollection = collections[0];
-    let currentCollection: ChordCollection = collections[0];
     
     $: hidden = !$isLeader;
-    $: changed = currentCollection &&
+    $: changed = $chordCollection &&
         selectedCollection &&
-        currentCollection.name !== selectedCollection.name;
+        $chordCollection.name !== selectedCollection.name;
+        
+    $: disabled = !$aiMode && !changed;
         
     songTitle.subscribe($songTitle => {
         selectedCollection = collections.find(c => c.name === $songTitle) ?? selectedCollection;
-        currentCollection = selectedCollection;
+        $chordCollection = selectedCollection;
     })
 
     const handleClick = () => {
         if ($isLoadingMainSequence) return;
-        if (changed) currentCollection = selectedCollection;
-        $controlSocket.newMainSequence(currentCollection.name);
+        if (changed) $chordCollection = selectedCollection;
+        $controlSocket.newMainSequence($chordCollection.name);
     }
 </script>
 
 <div class="container" class:hidden>
     <div class="refresh-wrapper" class:changed>
-        <button class="refresh" on:click={handleClick}>
+        <button class="refresh" class:disabled on:click={handleClick}>
             {#if $isLoadingMainSequence}
                 <Moon color="#fff" duration="1s" size={25}/>
             {:else}
@@ -54,6 +55,11 @@
 </div>
 
 <style>
+    .disabled {
+        pointer-events: none;
+        opacity: .4;
+    }
+
     select {
         -webkit-appearance: none;
         user-select: none;
@@ -105,6 +111,7 @@
         width: 3.75em;
         height: 3.75em;
         border-radius: inherit;
+        transition: .2s all;
     }
     
     .refresh-wrapper {

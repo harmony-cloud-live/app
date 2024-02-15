@@ -41,7 +41,7 @@
         height: 100%;
         gap: 1em;
         overflow: visible;
-        margin-bottom: .5em;
+        /* margin-bottom: .25em; */
     }
 
     div {

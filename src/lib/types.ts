@@ -63,6 +63,9 @@ export type ControlSocket = WebSocket & {
     getLoop: () => void,
     getNoteDelay: () => void,
     getVelocity: () => void,
+    
+    manualChordDown: (songTitle: string, chord: Chord) => void,
+    manualChordUp: () => void,
 }; 
 
 export enum ControlEventType {
@@ -86,6 +89,8 @@ export enum ControlEventType {
     SET_NOTE_DELAY = 17,
     GET_VELOCITY = 18,
     SET_VELOCITY = 19,
+    MANUAL_CHORD_DOWN = 20,
+    MANUAL_CHORD_UP = 21,
 }
 
 export type ControlPayload = {

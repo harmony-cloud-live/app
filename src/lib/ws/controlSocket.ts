@@ -1,7 +1,7 @@
 import { get } from 'svelte/store';
 import { marshalControlEvent, unmarshalControlEvent } from './encoding';
 import { controlSocket, controlSocketReady, myUserId, myUsername } from '.';
-import { ControlEventType, type Client, type TimeSignature, type ControlSocket } from '$lib/types';
+import { ControlEventType, type Client, type TimeSignature, type ControlSocket, type Chord } from '$lib/types';
 import {
     clients,
     currentBeat,
@@ -243,6 +243,18 @@ export const initControlSocket = (baseUrl: string) => {
             ws.send(marshalControlEvent(ControlEventType.SET_VELOCITY, {velocity}));
         }
     }
+    
+    const manualChordDown = (songTitle: string, chord: Chord) => {
+        if (ws.readyState === WebSocket.OPEN && get(isLeader)) {
+            ws.send(marshalControlEvent(ControlEventType.MANUAL_CHORD_DOWN, {songTitle, chords: [chord]}));
+        }
+    }
+    
+    const manualChordUp = () => {
+        if (ws.readyState === WebSocket.OPEN && get(isLeader)) {
+            ws.send(marshalControlEvent(ControlEventType.MANUAL_CHORD_UP, {}));
+        }
+    }
 
     return { 
         ...ws,
@@ -264,6 +276,8 @@ export const initControlSocket = (baseUrl: string) => {
         setNoteDelay,
         getVelocity,
         setVelocity,
+        manualChordDown,
+        manualChordUp,
     };
 }
 

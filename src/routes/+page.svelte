@@ -2,12 +2,18 @@
     import {
         ChordButtons,
         ChordDisplay,
-        Player
+        Player,
+        ManualButtons
     } from '$lib/components';
+    import { aiMode } from '$lib/stores';
 </script>
 
 <section>
-    <ChordDisplay />
-    <ChordButtons />
-    <Player />
+    {#if $aiMode}
+        <ChordDisplay />
+        <ChordButtons />
+        <Player />
+    {:else}
+        <ManualButtons />
+    {/if}
 </section>

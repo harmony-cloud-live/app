@@ -1,6 +1,7 @@
 <script>
     import {
         LeaderDisplay,
+        ToggleAI,
         ChordCollectionDisplay,
         ClientDisplay
     } from '$lib/components';
@@ -11,6 +12,7 @@
         <ChordCollectionDisplay />
     </div>
     <LeaderDisplay />
+    <ToggleAI />
     <div>
         <ClientDisplay />
     </div>
