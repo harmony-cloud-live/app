@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { aiMode, controlSocket, currentBeat, isPlaying} from "$lib/stores";
+    import { aiMode, controlSocket, currentBeat, isPlaying, manualModeIndex} from "$lib/stores";
     import { playbackLoop } from "$lib/tone";
     import { cubicInOut } from "svelte/easing";
     import { fly } from "svelte/transition";
@@ -12,6 +12,7 @@
 
         $controlSocket.newBeat(0);
         $currentBeat = 0;
+        $manualModeIndex = 0;
         $isPlaying = false;
     }
 </script>
