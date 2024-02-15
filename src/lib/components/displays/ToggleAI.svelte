@@ -36,7 +36,7 @@
         width: 50%;
         height: 100%;
         border-radius: inherit;
-        transition: 200ms cubic-bezier(0.4, 0, 0.2, 1);
+        transition: 400ms cubic-bezier(0.4, 0, 0.2, 1);
         padding: .15em;
         box-sizing: border-box;
     }
