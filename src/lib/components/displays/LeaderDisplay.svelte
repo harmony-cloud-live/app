@@ -1,5 +1,6 @@
 <script lang="ts">
-    import { clients, controlSocket, isLeader, leaderId } from "$lib/stores";
+    import { clients, controlSocket, isLeader, leaderId, listenOnly } from "$lib/stores";
+    import { myUsername } from "$lib/ws";
     import { cubicInOut } from "svelte/easing";
     import { fly } from "svelte/transition";
 
@@ -16,7 +17,11 @@
             isExpanded = true;
             return;
         }
-        $controlSocket.newLeader(localStorage.getItem('hc-userId') || '')
+        if (!$listenOnly && $myUsername.length > 0) {
+            $controlSocket.newLeader(localStorage.getItem('hc-userId') || '')
+        } else {
+            window.location.reload()
+        }
     }
 
     const handlePointerUp = (event: PointerEvent) => {
@@ -32,7 +37,12 @@
     transition:fly={{ y: -100, duration: 250, easing: cubicInOut }}>
     <button class="leader" on:click={handleClick}>
         {#if isExpanded}
-            <span class="bold">take lead?</span>
+            {#if !$listenOnly && $myUsername.length > 0}
+                <span class="bold">take lead?</span>
+            {:else}
+                <span class="bold">set username to play</span>
+            {/if}
+
         {:else}
             <span><span class="bold">{leaderUsername ?? "no one"}</span> is lead</span>
         {/if}

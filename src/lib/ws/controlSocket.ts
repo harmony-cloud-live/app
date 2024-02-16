@@ -112,6 +112,8 @@ export const initControlSocket = (baseUrl: string) => {
                 if (Array.isArray(data.payload.clients)) {
                     const sortedClients = (data.payload.clients as Client[]).sort((a, b) => a.username.localeCompare(b.username));
                     clients.set(sortedClients);
+                } else {
+                    clients.set([]);
                 }
                 break;
             case ControlEventType.NEW_LOOP:
@@ -141,7 +143,10 @@ export const initControlSocket = (baseUrl: string) => {
 
     
     const setUsername = (username: string) => {
-        if (username) {
+        if (get(listenOnly)) {
+            if (ws.readyState === WebSocket.OPEN)
+                ws.send(marshalControlEvent(ControlEventType.SET_USERNAME, {username: "$listener$"}));
+        } else if (username) {
             myUsername.set(username);
             localStorage.setItem("hc-username", username);
 

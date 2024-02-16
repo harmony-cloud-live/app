@@ -18,6 +18,7 @@ export { midiSocket, controlSocket } from './ws';
 export const isLeader = writable(false);
 export const leaderId = writable('');
 export const clients = writable<Array<Client>>([]);
+export const listenOnly = writable(false);
 
 // tone.js
 export const toneContext = writable<AudioContextState | null>(null);
