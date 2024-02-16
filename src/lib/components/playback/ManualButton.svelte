@@ -1,7 +1,6 @@
 <script lang="ts">
     import { controlSocket } from "$lib/ws";
     import {
-        mainSequence,
         isSustaining,
         isLeader,
         manualModeIndex,
@@ -17,6 +16,7 @@
         $controlSocket.manualChordUp();
         $controlSocket.manualChordDown($songTitle, <Chord>{chordSymbol: chord});
         $manualModeIndex = index;
+        $controlSocket.setManualModeIndex(index);
     };
 
     const handleUp = () => {

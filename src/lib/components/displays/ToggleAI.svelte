@@ -1,17 +1,32 @@
 <script lang="ts">
-    import { aiMode, chordCollection, controlSocket, currentBeat, currentIndex, isPlaying, mainSequence, manualModeIndex} from "$lib/stores";
+    import { aiMode, chordCollection, controlSocket, currentBeat, currentIndex, isLoadingMainSequence, isPlaying, mainSequence, manualModeIndex} from "$lib/stores";
     import { playbackLoop } from "$lib/tone";
     import { cubicInOut } from "svelte/easing";
     import { fly } from "svelte/transition";
     import * as Tone from 'tone';
 
     const handleClick = () => {
+        if ($isLoadingMainSequence)
+            return;
+
+        // if ($aiMode) {
+        aiToManualIndex();
+        // } else {
+        //     manualToAiIndex();
+        // }
+
         $aiMode = !$aiMode;
+
+        $controlSocket.setPlaybackMode($aiMode);
         $playbackLoop.stop();
         Tone.Transport.stop();
 
         $controlSocket.newBeat(0);
         $currentBeat = 0;
+        $isPlaying = false;
+    }
+    
+    const aiToManualIndex = () => {
         $manualModeIndex = 0;
         for (let i = 0; i < $chordCollection.chords.length; i++) {
             if ($mainSequence[$currentIndex] === $chordCollection.chords[i]) {
@@ -19,8 +34,19 @@
                 break;
             }
         }
-        $isPlaying = false;
+        $controlSocket.setManualModeIndex($manualModeIndex);
     }
+    
+    // const manualToAiIndex = () => {
+    //     $currentIndex = 0;
+    //     for (let i = 0; i < $mainSequence.length; i++) {
+    //         if ($mainSequence[i] === $chordCollection.chords[$manualModeIndex]) {
+    //             $currentIndex = i;
+    //             break;
+    //         }
+    //     }
+    //     $controlSocket.newIndex($currentIndex);
+    // }
 </script>
 
 <div class="container fixed-center"

@@ -3,6 +3,7 @@ import { marshalControlEvent, unmarshalControlEvent } from './encoding';
 import { controlSocket, controlSocketReady, myUserId, myUsername } from '.';
 import { ControlEventType, type Client, type TimeSignature, type ControlSocket, type Chord } from '$lib/types';
 import {
+    aiMode,
     clients,
     currentBeat,
     currentIndex,
@@ -11,9 +12,11 @@ import {
     isPlaying,
     isSustaining,
     leaderId,
+    listenOnly,
     loopEnd,
     loopStart,
     mainSequence,
+    manualModeIndex,
     noteDelay,
     songTitle,
     timeSignature,
@@ -129,6 +132,19 @@ export const initControlSocket = (baseUrl: string) => {
             case ControlEventType.GET_VELOCITY:
                 if (data.payload.velocity !== undefined)
                     velocity.set(data.payload.velocity);
+                break;
+            case ControlEventType.GET_PLAYBACK_MODE:
+                if (data.payload.playbackMode !== undefined) {
+                    if (data.payload.playbackMode === 'ai') {
+                        aiMode.set(true);
+                    } else if (data.payload.playbackMode === 'manual') {
+                        aiMode.set(false);
+                    }
+                }
+                break;
+            case ControlEventType.GET_MANUAL_MODE_INDEX:
+                if (data.payload.index !== undefined)
+                    manualModeIndex.set(data.payload.index);
                 break;
             default:
                 console.log('unknown control event type', data.type)
@@ -260,6 +276,31 @@ export const initControlSocket = (baseUrl: string) => {
             ws.send(marshalControlEvent(ControlEventType.MANUAL_CHORD_UP, {}));
         }
     }
+    
+    const setPlaybackMode = (aiMode: boolean) => {
+        if (ws.readyState === WebSocket.OPEN && get(isLeader)) {
+            const playbackMode = aiMode ? 'ai' : 'manual';
+            ws.send(marshalControlEvent(ControlEventType.SET_PLAYBACK_MODE, {playbackMode}));
+        }
+    }
+    
+    const getPlaybackMode = () => {
+        if (ws.readyState === WebSocket.OPEN) {
+            ws.send(marshalControlEvent(ControlEventType.GET_PLAYBACK_MODE, {}));
+        }
+    }
+    
+    const setManualModeIndex = (index: number) => {
+        if (ws.readyState === WebSocket.OPEN && get(isLeader)) {
+            ws.send(marshalControlEvent(ControlEventType.SET_MANUAL_MODE_INDEX, {index}));
+        }
+    }
+    
+    const getManualModeIndex = () => {
+        if (ws.readyState === WebSocket.OPEN) {
+            ws.send(marshalControlEvent(ControlEventType.GET_MANUAL_MODE_INDEX, {}));
+        }
+    }
 
     return { 
         ...ws,
@@ -283,6 +324,10 @@ export const initControlSocket = (baseUrl: string) => {
         setVelocity,
         manualChordDown,
         manualChordUp,
+        getPlaybackMode,
+        setPlaybackMode,
+        getManualModeIndex,
+        setManualModeIndex,
     };
 }
 
