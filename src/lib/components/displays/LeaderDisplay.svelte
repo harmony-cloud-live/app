@@ -4,11 +4,11 @@
     import { cubicInOut } from "svelte/easing";
     import { fly } from "svelte/transition";
 
-    $: isExpanded = false;
     $: leaderUsername = $clients.find(c => c.userId === $leaderId)?.username;
+    $: isExpanded = leaderUsername === undefined;
 
     isLeader.subscribe(() => {
-        isExpanded = false;
+        isExpanded = leaderUsername === undefined;
     })
 
     const handleClick = () => {
@@ -27,7 +27,7 @@
     const handlePointerUp = (event: PointerEvent) => {
         if (event.target instanceof HTMLButtonElement || 
             event.target instanceof HTMLSpanElement) return;
-        isExpanded = false;
+        isExpanded = leaderUsername === undefined;
     }
 </script>
 
@@ -42,9 +42,8 @@
             {:else}
                 <span class="bold">set username to play</span>
             {/if}
-
         {:else}
-            <span><span class="bold">{leaderUsername ?? "no one"}</span> is lead</span>
+            <span><span class="bold">{leaderUsername}</span> is lead</span>
         {/if}
     </button>
 </div>
