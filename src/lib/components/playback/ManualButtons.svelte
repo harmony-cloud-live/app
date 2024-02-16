@@ -11,7 +11,7 @@
         if (length <= 8) fontSize = 2.5;
         else if (length <= 18) fontSize = 2.25;
         else if (length <= 24) fontSize = 2;
-        else if (length <= 32) fontSize = 1.75;
+        else if (length <= 32) fontSize = 2;
         else if (length <= 64) fontSize = 1.5;
     };
 </script>
