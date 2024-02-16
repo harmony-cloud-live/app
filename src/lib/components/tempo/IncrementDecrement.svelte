@@ -32,7 +32,7 @@
     }
 </script>
 
-<div class='controls' transition:slide={{ duration: 200, easing: quintOut }}>
+<div class='controls'>
     <button class="left" class:longPressActive
         on:pointerdown|preventDefault|stopPropagation={() => handleDown(-1)}
         on:pointerup|preventDefault|stopPropagation={handleUp}>

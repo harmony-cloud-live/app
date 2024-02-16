@@ -5,6 +5,8 @@
     import chordCollections from "$lib/data/chords.json";
     import type { ChordCollection } from "$lib/types";
     import { Moon } from "svelte-loading-spinners";
+    import { fly } from "svelte/transition";
+    import { cubicInOut } from "svelte/easing";
     
     const collections = chordCollections.map(c => {
         return {
@@ -16,12 +18,11 @@
     
     let selectedCollection: ChordCollection = collections[0];
     
-    $: hidden = !$isLeader;
     $: changed = $chordCollection &&
         selectedCollection &&
         $chordCollection.name !== selectedCollection.name;
         
-    $: disabled = !$aiMode && !changed;
+    $: disabled = !$aiMode;
         
     songTitle.subscribe($songTitle => {
         selectedCollection = collections.find(c => c.name === $songTitle) ?? selectedCollection;
@@ -35,24 +36,26 @@
     }
 </script>
 
-<div class="container" class:hidden>
-    <div class="refresh-wrapper" class:changed>
-        <button class="refresh" class:disabled on:click={handleClick}>
-            {#if $isLoadingMainSequence}
-                <Moon color="#fff" duration="1s" size={25}/>
-            {:else}
-                <img src={RefreshIcon} alt="Refresh"/>
-            {/if}
-        </button>
+{#if $isLeader}
+    <div class="container" class:disabled transition:fly={{y: -50, duration: 150, easing: cubicInOut}}>
+        <div class="refresh-wrapper" class:changed>
+            <button class="refresh" on:click={handleClick}>
+                {#if $isLoadingMainSequence}
+                    <Moon color="#fff" duration="1s" size={25}/>
+                {:else}
+                    <img src={RefreshIcon} alt="Refresh"/>
+                {/if}
+            </button>
+        </div>
+        <div class="dropdown">
+            <select bind:value={selectedCollection}>
+                {#each collections as collection (collection.name)}
+                    <option value={collection}>{collection.name}</option>
+                {/each}
+            </select>
+        </div>
     </div>
-    <div class="dropdown">
-        <select bind:value={selectedCollection}>
-            {#each collections as collection (collection.name)}
-                <option value={collection}>{collection.name}</option>
-            {/each}
-        </select>
-    </div>
-</div>
+{/if}
 
 <style>
     .disabled {
@@ -121,10 +124,6 @@
     
     .changed {
         background: linear-gradient(45deg, #f09433 0%,#e6683c 25%,#dc2743 50%, #cc2366 75%, #bc1888 100%);
-    }
-    
-    .hidden {
-        margin-top: -5em;
     }
     
     img {
