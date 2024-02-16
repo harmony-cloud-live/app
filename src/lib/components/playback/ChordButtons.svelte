@@ -18,13 +18,23 @@
         $loopStart = -1;
         $loopEnd = -1;
     }
+
+    let fontSize = 1;
+    $: {
+        const length = $mainSequence.length;
+        if (length <= 8) fontSize = 2.5;
+        else if (length <= 16) fontSize = 2.25;
+        else if (length <= 24) fontSize = 2;
+        else if (length <= 32) fontSize = 1.5;
+        else if (length <= 64) fontSize = 1;
+    };
 </script>
 
 <svelte:window on:pointerup={handleGlobalUp} />
 
 <div class="container">
     {#each $mainSequence as chord, index (index)}
-        <ChordButton {chord} {index}
+        <ChordButton {chord} {index} {fontSize}
             isCurrent={index === $currentIndex}
             isLoopStart={index === $loopStart}
             isLoopEnd={index === $loopEnd}

@@ -16,16 +16,8 @@
     export let index: number;
     export let isInLoop: boolean, isLoopStart: boolean, isLoopEnd: boolean;
     export let isCurrent: boolean;
+    export let fontSize: number;
 
-    let fontSize = 1;
-    $: {
-        const length = $mainSequence.length;
-        if (length <= 8) fontSize = 2.5;
-        else if (length <= 16) fontSize = 2.25;
-        else if (length <= 24) fontSize = 2;
-        else if (length <= 32) fontSize = 1.5;
-        else if (length <= 64) fontSize = 1;
-    };
 
     const handleDown = () => {
         if (!$isPlaying) {

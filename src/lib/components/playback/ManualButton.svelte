@@ -11,16 +11,7 @@
 
     export let chord: string;
     export let index: number;
-
-    let fontSize = 1;
-    $: {
-        const length = $mainSequence.length;
-        if (length <= 8) fontSize = 2.5;
-        else if (length <= 16) fontSize = 2.25;
-        else if (length <= 24) fontSize = 2;
-        else if (length <= 32) fontSize = 1.5;
-        else if (length <= 64) fontSize = 1;
-    };
+    export let fontSize: number;
 
     const handleDown = () => {
         $controlSocket.manualChordUp();
