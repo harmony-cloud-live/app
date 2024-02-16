@@ -67,17 +67,6 @@
     }
 
     button.isCurrent {
-        background: linear-gradient(
-            45deg,
-            #f09433 0%,
-            #e6683c 25%,
-            #dc2743 50%,
-            #cc2366 75%,
-            #bc1888 100%
-        );
-
-        &.isListener {
-            background: linear-gradient(100deg, #00d2ff 0%, #3a47d5 100%);
-        }
+        background: linear-gradient(90deg, #F7971E, #e8bd00);
     }
 </style>

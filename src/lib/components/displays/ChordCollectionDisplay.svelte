@@ -9,7 +9,7 @@
     const collections = chordCollections.map(c => {
         return {
             name: c.title,
-            chords: c.chordSymbols,
+            chords: c.chordSymbols.sort(),
             key: c.key,
         }
     });
