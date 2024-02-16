@@ -20,7 +20,7 @@
         justify-content: center;
         align-items: center;
         gap: .5em;
-        width: 15em;
+        width: 22em;
         padding: 2rem;
         font-size: 1.5em;
         font-weight: 700;
