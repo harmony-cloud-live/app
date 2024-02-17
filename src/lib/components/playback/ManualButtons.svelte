@@ -1,35 +1,55 @@
-<script>
-    import {
-        chordCollection, mainSequence,
-    } from '$lib/stores';
+<script lang="ts">
+    import { songTitle } from '$lib/stores';
+    import chordProgressions from '$lib/data/songs.json';
     import ManualButton from './ManualButton.svelte';
 
+    const songs = chordProgressions.map(s => {
+        return {
+            name: s.title,
+            chords: s.chordSymbols,
+            key: s.key,
+            length: s.chordSymbols.reduce((acc, curr) => acc + curr.length, 0),
+        }
+    });
+
+    let song = songs[0];
+    songTitle.subscribe($songTitle => {
+        song = songs.find(s => s.name === $songTitle) ?? song;
+    });
 
     let fontSize = 1;
     $: {
-        const length = $chordCollection.chords.length;
+        const length = song.length;
         if (length <= 8) fontSize = 2.5;
         else if (length <= 18) fontSize = 2.25;
-        else if (length <= 24) fontSize = 2;
-        else if (length <= 32) fontSize = 2;
-        else if (length <= 64) fontSize = 1.5;
+        else if (length <= 32) fontSize = 2.1;
+        else if (length <= 64) fontSize = 1.9;
     };
 </script>
 
 <div class="container">
-    {#each $chordCollection.chords as chord, index (index)}
-        <ManualButton {chord} {index} {fontSize}/>
+    {#each song.chords as chords, row (row)}
+        <div class="row">
+            {#each chords as chordSymbol, col (col)}
+                <ManualButton {chordSymbol} {fontSize} {row} {col} />
+            {/each}
+        </div>
     {/each}
 </div>
 
 <style>
+    .row {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+        gap: .5em;
+    }
     .container {
         display: flex;
         flex-direction: column;
-        align-items: center;
-        flex-wrap: wrap;
         gap: .5em;
-        width: 98vw;
+        width: 100vw;
         max-height: 70vh;
     }
 </style>

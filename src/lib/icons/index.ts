@@ -12,3 +12,4 @@ export { default as MetronomeIcon } from './metronome.svg';
 export { default as ExitLoopIcon } from './exit-loop.svg';
 export { default as CancelIcon } from './cancel.svg';
 export { default as ListenIcon } from './listen.svg';
+export { default as SongIcon } from './song.svg';

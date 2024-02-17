@@ -24,7 +24,7 @@
 {#if $isLeader}
     <footer transition:fly={{y: 50, duration: 150, easing: cubicInOut}}>
         <TempoControl />
-        <SliderWrapper title="ARP" max={300} onChange={setNoteDelay} initialValue={$noteDelay} />
+        <SliderWrapper title="ARP" max={200} onChange={setNoteDelay} initialValue={$noteDelay} />
         <SliderWrapper title="VOL" onChange={setVelocity} initialValue={$velocity} />
         <SustainPedal />
     </footer>

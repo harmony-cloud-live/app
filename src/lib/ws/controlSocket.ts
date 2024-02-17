@@ -16,7 +16,8 @@ import {
     loopEnd,
     loopStart,
     mainSequence,
-    manualModeIndex,
+    manualModeCol,
+    manualModeRow,
     noteDelay,
     songTitle,
     timeSignature,
@@ -81,7 +82,7 @@ export const initControlSocket = (baseUrl: string) => {
                     currentIndex.set(data.payload.index);
                 break;
             case ControlEventType.NEW_MAIN_SEQUENCE:
-                console.log('new main sequence', data.payload.chords);
+                console.log('new main sequence', data.payload.songTitle);
                 if (Array.isArray(data.payload.chords) && data.payload.chords.length > 0) {
                     mainSequence.set(data.payload.chords.map(c => c.chordSymbol));
                     isLoadingMainSequence.set(false);
@@ -142,9 +143,11 @@ export const initControlSocket = (baseUrl: string) => {
                     }
                 }
                 break;
-            case ControlEventType.GET_MANUAL_MODE_INDEX:
-                if (data.payload.index !== undefined)
-                    manualModeIndex.set(data.payload.index);
+            case ControlEventType.GET_MANUAL_MODE_CHORD:
+                if (data.payload.row !== undefined && data.payload.col !== undefined) {
+                    manualModeRow.set(data.payload.row);
+                    manualModeCol.set(data.payload.col);
+                }
                 break;
             default:
                 console.log('unknown control event type', data.type)
@@ -290,15 +293,15 @@ export const initControlSocket = (baseUrl: string) => {
         }
     }
     
-    const setManualModeIndex = (index: number) => {
+    const setManualModeChord = (row: number, col: number) => {
         if (ws.readyState === WebSocket.OPEN && get(isLeader)) {
-            ws.send(marshalControlEvent(ControlEventType.SET_MANUAL_MODE_INDEX, {index}));
+            ws.send(marshalControlEvent(ControlEventType.SET_MANUAL_MODE_CHORD, {row, col}));
         }
     }
     
-    const getManualModeIndex = () => {
+    const getManualModeChord = () => {
         if (ws.readyState === WebSocket.OPEN) {
-            ws.send(marshalControlEvent(ControlEventType.GET_MANUAL_MODE_INDEX, {}));
+            ws.send(marshalControlEvent(ControlEventType.GET_MANUAL_MODE_CHORD, {}));
         }
     }
 
@@ -326,8 +329,8 @@ export const initControlSocket = (baseUrl: string) => {
         manualChordUp,
         getPlaybackMode,
         setPlaybackMode,
-        getManualModeIndex,
-        setManualModeIndex,
+        getManualModeChord,
+        setManualModeChord,
     };
 }
 

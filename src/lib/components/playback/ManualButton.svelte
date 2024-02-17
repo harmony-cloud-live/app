@@ -3,38 +3,42 @@
     import {
         isSustaining,
         isLeader,
-        manualModeIndex,
         songTitle,
+        manualModeRow,
+        manualModeCol,
     } from "$lib/stores";
     import type { Chord } from "$lib/types";
 
-    export let chord: string;
-    export let index: number;
+    export let chordSymbol: string;
     export let fontSize: number;
+    export let row: number;
+    export let col: number;
+    
+    $: isCurrent = row === $manualModeRow && col === $manualModeCol
+    $: isListener = !$isLeader;
 
     const handleDown = () => {
         $controlSocket.manualChordUp();
-        $controlSocket.manualChordDown($songTitle, <Chord>{chordSymbol: chord});
-        $manualModeIndex = index;
-        $controlSocket.setManualModeIndex(index);
+        $controlSocket.manualChordDown($songTitle, <Chord>{chordSymbol});
+        $controlSocket.setManualModeChord(row, col);
+        $manualModeRow = row;
+        $manualModeCol = col;
     };
 
     const handleUp = () => {
-        if (!$isSustaining && $manualModeIndex === index) {
+        if (!$isSustaining && isCurrent) {
             $controlSocket.manualChordUp();
         }
     };
-
-    $: isListener = !$isLeader;
 </script>
 
 <button
     class:isListener
-    class:isCurrent={index === $manualModeIndex}
+    class:isCurrent
     style={`font-size: ${fontSize}em`}
     on:pointerdown|preventDefault={handleDown}
     on:pointerup|preventDefault={handleUp}>
-    {chord}
+    {chordSymbol}
 </button>
 
 <style>

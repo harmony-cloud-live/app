@@ -1,5 +1,6 @@
 <script lang="ts">
-    import { aiMode, chordCollection, controlSocket, currentBeat, currentIndex, isLoadingMainSequence, isPlaying, mainSequence, manualModeIndex} from "$lib/stores";
+    import { SongIcon } from "$lib/icons";
+    import { aiMode, controlSocket, currentBeat, isLoadingMainSequence, isPlaying} from "$lib/stores";
     import { playbackLoop } from "$lib/tone";
     import { cubicInOut } from "svelte/easing";
     import { fly } from "svelte/transition";
@@ -8,12 +9,6 @@
     const handleClick = () => {
         if ($isLoadingMainSequence)
             return;
-
-        // if ($aiMode) {
-        aiToManualIndex();
-        // } else {
-        //     manualToAiIndex();
-        // }
 
         $aiMode = !$aiMode;
 
@@ -25,35 +20,13 @@
         $currentBeat = 0;
         $isPlaying = false;
     }
-    
-    const aiToManualIndex = () => {
-        $manualModeIndex = 0;
-        for (let i = 0; i < $chordCollection.chords.length; i++) {
-            if ($mainSequence[$currentIndex] === $chordCollection.chords[i]) {
-                $manualModeIndex = i;
-                break;
-            }
-        }
-        $controlSocket.setManualModeIndex($manualModeIndex);
-    }
-    
-    // const manualToAiIndex = () => {
-    //     $currentIndex = 0;
-    //     for (let i = 0; i < $mainSequence.length; i++) {
-    //         if ($mainSequence[i] === $chordCollection.chords[$manualModeIndex]) {
-    //             $currentIndex = i;
-    //             break;
-    //         }
-    //     }
-    //     $controlSocket.newIndex($currentIndex);
-    // }
 </script>
 
 <div class="container fixed-center"
     transition:fly={{ y: -100, duration: 250, easing: cubicInOut }}>
-    <button class="leader" on:click={handleClick}>
-        <span>AI MODE</span>
-        <span>MANUAL</span>
+    <button on:click={handleClick}>
+        <span>AI</span>
+        <span><img src={SongIcon} alt="song"/></span>
         <div class="highlight orange-gradient" class:left={$aiMode}>
             <div class="bg"></div>
         </div>
@@ -61,6 +34,11 @@
 </div>
 
 <style>
+    img {
+        object-fit: contain;
+        width: 1.2em;
+        height: 1.2em;
+    }
     .highlight {
         position: absolute;
         top: 0;
@@ -79,6 +57,9 @@
     
     span {
         z-index: 10;
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
     
     .bg {
@@ -104,7 +85,7 @@
         display: flex;
         flex-direction: row;
         align-items: center;
-        gap: 2.35em;
+        gap: 2.5em;
         font-size: 1.25em;
         font-weight: 400;
         text-transform: uppercase;

@@ -21,8 +21,7 @@
 
     const handleDown = () => {
         if (!$isPlaying) {
-            if ($isSustaining)
-                $midiSocket.sendChordUp($previousIndex);
+            $midiSocket.sendChordUp($previousIndex);
             $midiSocket.sendChordDown(index);
         }
 

@@ -3,43 +3,38 @@
     import { isLeader, isLoadingMainSequence, songTitle, chordCollection, aiMode } from "$lib/stores";
     import { controlSocket } from "$lib/ws";
     import chordCollections from "$lib/data/chords.json";
-    import type { ChordCollection } from "$lib/types";
     import { Moon } from "svelte-loading-spinners";
     import { fly } from "svelte/transition";
     import { cubicInOut } from "svelte/easing";
+    import type { ChordCollection } from "$lib/types";
     
     const collections = chordCollections.map(c => {
         return {
             name: c.title,
-            chords: c.chordSymbols.sort(),
+            chords: c.chordSymbols,
             key: c.key,
         }
     });
     
     let selectedCollection: ChordCollection = collections[0];
-    
-    $: changed = $chordCollection &&
-        selectedCollection &&
-        $chordCollection.name !== selectedCollection.name;
-        
     $: disabled = !$aiMode;
         
     songTitle.subscribe($songTitle => {
-        selectedCollection = collections.find(c => c.name === $songTitle) ?? selectedCollection;
-        $chordCollection = selectedCollection;
+        selectedCollection = collections.find(c => c.name === $songTitle) ?? collections[0];
+        $chordCollection = selectedCollection
     })
 
-    const handleClick = () => {
+    const refresh = () => {
         if ($isLoadingMainSequence) return;
-        if (changed) $chordCollection = selectedCollection;
-        $controlSocket.newMainSequence($chordCollection.name);
+        $controlSocket.newMainSequence(selectedCollection.name);
+        $songTitle = selectedCollection.name;
     }
 </script>
 
 {#if $isLeader}
     <div class="container" class:disabled transition:fly={{y: -50, duration: 150, easing: cubicInOut}}>
-        <div class="refresh-wrapper" class:changed>
-            <button class="refresh" on:click={handleClick}>
+        <div class="refresh-wrapper">
+            <button class="refresh" on:click={refresh}>
                 {#if $isLoadingMainSequence}
                     <Moon color="#fff" duration="1s" size={25}/>
                 {:else}
@@ -48,7 +43,7 @@
             </button>
         </div>
         <div class="dropdown">
-            <select bind:value={selectedCollection}>
+            <select bind:value={selectedCollection} on:change={refresh}>
                 {#each collections as collection (collection.name)}
                     <option value={collection}>{collection.name}</option>
                 {/each}
@@ -120,10 +115,6 @@
     .refresh-wrapper {
         border-radius: 5em;
         padding: .2em;
-    }
-    
-    .changed {
-        background: linear-gradient(45deg, #f09433 0%,#e6683c 25%,#dc2743 50%, #cc2366 75%, #bc1888 100%);
     }
     
     img {

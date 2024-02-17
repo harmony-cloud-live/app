@@ -68,8 +68,8 @@ export type ControlSocket = WebSocket & {
     manualChordUp: () => void,
     getPlaybackMode: () => void,
     setPlaybackMode: (aiMode: boolean) => void,
-    getManualModeIndex: () => void,
-    setManualModeIndex: (index: number) => void,
+    getManualModeChord: () => void,
+    setManualModeChord: (row: number, col: number) => void,
 }; 
 
 export enum ControlEventType {
@@ -97,8 +97,8 @@ export enum ControlEventType {
     MANUAL_CHORD_UP = 21,
     GET_PLAYBACK_MODE = 22,
     SET_PLAYBACK_MODE = 23,
-    GET_MANUAL_MODE_INDEX = 24,
-    SET_MANUAL_MODE_INDEX = 25,
+    GET_MANUAL_MODE_CHORD = 24,
+    SET_MANUAL_MODE_CHORD = 25,
 }
 
 export type ControlPayload = {
@@ -115,6 +115,8 @@ export type ControlPayload = {
     noteDelay?: number;
     velocity?: number;
     playbackMode?: string;
+    row?: number;
+    col?: number;
 }
 
 export type ControlEvent = {

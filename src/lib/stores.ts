@@ -7,7 +7,8 @@ export const songTitle = writable('');
 export const isLoadingMainSequence = writable(false);
 export const aiMode = writable(true);
 export const chordCollection = writable<ChordCollection>();
-export const manualModeIndex = writable(-1);
+export const manualModeRow = writable(-1);
+export const manualModeCol = writable(-1);
 
 // sockets
 import { midiSocketReady, controlSocketReady } from './ws';
