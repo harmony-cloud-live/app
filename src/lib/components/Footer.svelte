@@ -3,6 +3,7 @@
         TempoControl,
         SustainPedal,
         SliderWrapper,
+        LeaderDisplay,
     } from '$lib/components';
     import { velocity, noteDelay, isLeader } from '$lib/stores';
     import { controlSocket } from '$lib/ws';
@@ -27,6 +28,10 @@
         <SliderWrapper title="ARP" max={200} onChange={setNoteDelay} initialValue={$noteDelay} />
         <SliderWrapper title="VOL" onChange={setVelocity} initialValue={$velocity} />
         <SustainPedal />
+    </footer>
+{:else}
+    <footer transition:fly={{y: 50, duration: 150, easing: cubicInOut}}>
+        <LeaderDisplay />
     </footer>
 {/if}
 

@@ -9,6 +9,7 @@ export const aiMode = writable(true);
 export const chordCollection = writable<ChordCollection>();
 export const manualModeRow = writable(-1);
 export const manualModeCol = writable(-1);
+export const manualProgression = writable<Array<Array<string>>>()
 
 // sockets
 import { midiSocketReady, controlSocketReady } from './ws';

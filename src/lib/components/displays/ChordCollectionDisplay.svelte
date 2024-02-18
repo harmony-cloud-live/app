@@ -17,7 +17,6 @@
     });
     
     let selectedCollection: ChordCollection = collections[0];
-    $: disabled = !$aiMode;
         
     songTitle.subscribe($songTitle => {
         selectedCollection = collections.find(c => c.name === $songTitle) ?? collections[0];
@@ -32,7 +31,7 @@
 </script>
 
 {#if $isLeader}
-    <div class="container" class:disabled transition:fly={{y: -50, duration: 150, easing: cubicInOut}}>
+    <div class="container" transition:fly={{y: -50, duration: 150, easing: cubicInOut}}>
         <div class="refresh-wrapper">
             <button class="refresh" on:click={refresh}>
                 {#if $isLoadingMainSequence}
@@ -53,11 +52,6 @@
 {/if}
 
 <style>
-    .disabled {
-        pointer-events: none;
-        opacity: .4;
-    }
-
     select {
         -webkit-appearance: none;
         user-select: none;

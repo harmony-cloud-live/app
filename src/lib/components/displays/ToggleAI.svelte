@@ -1,13 +1,13 @@
 <script lang="ts">
     import { SongIcon } from "$lib/icons";
-    import { aiMode, controlSocket, currentBeat, isLoadingMainSequence, isPlaying} from "$lib/stores";
+    import { aiMode, controlSocket, currentBeat, isLeader, isLoadingMainSequence, isPlaying} from "$lib/stores";
     import { playbackLoop } from "$lib/tone";
     import { cubicInOut } from "svelte/easing";
     import { fly } from "svelte/transition";
     import * as Tone from 'tone';
 
     const handleClick = () => {
-        if ($isLoadingMainSequence)
+        if ($isLoadingMainSequence || !$isLeader)
             return;
 
         $aiMode = !$aiMode;
@@ -27,7 +27,7 @@
     <button on:click={handleClick}>
         <span>AI</span>
         <span><img src={SongIcon} alt="song"/></span>
-        <div class="highlight orange-gradient" class:left={$aiMode}>
+        <div class="highlight" class:left={$aiMode} class:yellow-gradient={!$aiMode} class:orange-gradient={$isLeader} class:blue-gradient={!$isLeader}>
             <div class="bg"></div>
         </div>
     </button>
@@ -46,7 +46,7 @@
         width: 50%;
         height: 100%;
         border-radius: inherit;
-        transition: 400ms cubic-bezier(0.4, 0, 0.2, 1);
+        transition: 300ms cubic-bezier(0.4, 0, 0.2, 1);
         padding: .15em;
         box-sizing: border-box;
     }
@@ -70,6 +70,7 @@
     }
 
     .container {
+        z-index: 10;
         padding: .2em;
         display: flex;
         align-items: center;

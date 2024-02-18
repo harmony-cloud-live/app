@@ -2,6 +2,7 @@
     {
         "title": "Legacy Dances Solo 2",
         "key": "F",
+        "fontSize": "2.11",
         "chordSymbols": [
             [
                 "F-11(9)",
@@ -40,12 +41,6 @@
                 "DbMaj7",
                 "Bb-9",
                 "G-7(b5)",
-                "C7(b13)(b9)"
-            ],
-            [
-                "DbMaj7",
-                "Bb-9",
-                "G-7(b5)",
                 "Eb13sus(9)",
                 "C7(#9)(#5)",
                 "F7sus(add3)"
@@ -55,6 +50,7 @@
     {
         "title": "I Know Love",
         "key": "Eb",
+        "fontSize": "2.4",
         "chordSymbols": [
             [
                 "EbMaj7",
@@ -64,7 +60,7 @@
                 "F(add2)/A"
             ],
             [
-                "AbMaj7",
+                "AbdimMaj7",
                 "Eb(add2)/G",
                 "Bb-7",
                 "Eb13",
@@ -78,7 +74,7 @@
             ],
             [
                 "EbMaj7",
-                "Bb(add2)/D",
+                "Bb13sus(9)",
                 "EbMaj7",
                 "Bb13sus(9)"
             ]
@@ -87,6 +83,7 @@
     {
         "title": "Echoes Of The Lion",
         "key": "G",
+        "fontSize": "2.26",
         "chordSymbols": [
             [
                 "G(add2)",
@@ -125,6 +122,7 @@
     {
         "title": "Now",
         "key": "G",
+        "fontSize": "2.2",
         "chordSymbols": [
             [
                 "E-7(addb6)",
@@ -145,8 +143,11 @@
                 "A-11(9)"
             ],
             [
+                "E-11(9)",
                 "FMaj13(#11)(9)",
-                "BbMaj7",
+                "BbMaj7"
+            ],
+            [
                 "E-7(addb6)",
                 "E-11(9)"
             ],
@@ -160,6 +161,7 @@
     {
         "title": "Ells Boogie",
         "key": "Eb",
+        "fontSize": "2.15",
         "chordSymbols": [
             [
                 "Eb7(#9)",
@@ -175,7 +177,9 @@
             ],
             [
                 "Fb9(#11)",
-                "Bb7(b13)",
+                "Bb7(b13)"
+            ],
+            [
                 "Eb-6",
                 "Ab9",
                 "Eb-6",
@@ -199,6 +203,7 @@
     {
         "title": "A Radicals Love",
         "key": "Eb",
+        "fontSize": "2.6",
         "chordSymbols": [
             [
                 "EbMaj7",
@@ -235,6 +240,7 @@
     {
         "title": "What A Wonderful World",
         "key": "C",
+        "fontSize": "2.2",
         "chordSymbols": [
             [
                 "C(addb6)",
@@ -279,6 +285,7 @@
     {
         "title": "We Are An African People",
         "key": "Bb",
+        "fontSize": "2.6",
         "chordSymbols": [
             [
                 "G-",
@@ -298,6 +305,13 @@
                 "D7(b9)",
                 "C9",
                 "G-/Bb"
+            ],
+            [
+                "G-",
+                "EbMaj7",
+                "G-(b6)(9)",
+                "Adim/Eb",
+                "D7(b9)"
             ],
             [
                 "G-6",

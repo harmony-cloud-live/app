@@ -1,6 +1,5 @@
 <script>
     import {
-        LeaderDisplay,
         ToggleAI,
         ChordCollectionDisplay,
         ClientDisplay
@@ -12,11 +11,7 @@
     <div>
         <ChordCollectionDisplay />
     </div>
-    {#if $isLeader}
-        <ToggleAI />
-    {:else}
-        <LeaderDisplay />
-    {/if}
+    <ToggleAI />
     <div>
         <ClientDisplay />
     </div>
@@ -27,7 +22,7 @@
         display: flex;
         justify-content: space-between;
         align-items: center;
-        padding: .75em;
-        height: 4.25em;
+        padding: .75em 0 .5em .75em;
+        height: 4.1em;
     }
 </style>

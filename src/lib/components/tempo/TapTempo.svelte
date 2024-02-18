@@ -53,7 +53,7 @@
         align-items: center;
         border-radius: 3em;
         height: 5em;
-        width: 9em;
+        width: 6.5em;
         background-color: rgb(37, 37, 37);
 
         &:active {
@@ -64,7 +64,7 @@
     }
     
     .bpm {
-        font-size: 3em;
+        font-size: 2em;
         font-weight: 500;
     }
 </style>

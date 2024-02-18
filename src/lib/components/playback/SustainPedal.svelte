@@ -33,9 +33,9 @@
     }
 
     button {
-        width: 8em;
+        width: 7.5em;
         font-weight: 700;
-        font-size: 1.75rem;
+        font-size: 1.5rem;
         text-transform: uppercase;
         letter-spacing: 0.1em;
         text-decoration: none;

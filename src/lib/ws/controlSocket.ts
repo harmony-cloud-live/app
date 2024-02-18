@@ -55,6 +55,8 @@ export const initControlSocket = (baseUrl: string) => {
             cs.getTimeSignature();
             cs.getNoteDelay();
             cs.getVelocity();
+            cs.getPlaybackMode();
+            cs.getManualModeChord();
         }
     }
 

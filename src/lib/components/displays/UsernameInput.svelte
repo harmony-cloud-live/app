@@ -33,6 +33,8 @@
         $controlSocket.getTimeSignature();
         $controlSocket.getNoteDelay();
         $controlSocket.getVelocity();
+        $controlSocket.getPlaybackMode();
+        $controlSocket.getManualModeChord();
     }
     
     const handleKeyDown = (event: KeyboardEvent) => {

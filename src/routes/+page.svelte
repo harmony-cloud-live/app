@@ -3,7 +3,8 @@
         ChordButtons,
         ChordDisplay,
         Player,
-        ManualButtons
+        ManualButtons,
+        ManualPlayer
     } from '$lib/components';
     import { aiMode } from '$lib/stores';
     import { cubicInOut } from 'svelte/easing';
@@ -11,14 +12,15 @@
 </script>
 
 {#if $aiMode}
-    <section transition:fly={{x: -2500, duration: 400, easing: cubicInOut}}>
+    <section transition:fly={{x: -2500, duration: 300, easing: cubicInOut}}>
         <ChordDisplay />
         <ChordButtons />
         <Player />
     </section>
 {:else}
-    <section transition:fly={{x: 2500, duration: 400, easing: cubicInOut}}>
+    <section transition:fly={{x: 2500, duration: 300, easing: cubicInOut}}>
         <ManualButtons />
+        <ManualPlayer />
     </section>
 {/if}
 

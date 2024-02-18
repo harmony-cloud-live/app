@@ -49,20 +49,20 @@
 
 <style>
     .left {
-        margin-right: -3em;
-        padding-right: 3.5em;
+        margin-right: -3.5em;
+        padding-right: 4em;
     }
     .right {
-        margin-left: -3em;
-        padding-left: 3.5em;
+        margin-left: -3.5em;
+        padding-left: 4em;
     }
     button {
         display: flex;
         justify-content: center;
         align-items: center;
-        width: 6em;
-        height: 3.34em;
-        font-size: 1.5em;
+        width: 6.3em;
+        height: 3.85em;
+        font-size: 1.3em;
         font-weight: 700;
         border-radius: 2em;
         background-color: #1a1a1a;

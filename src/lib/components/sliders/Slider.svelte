@@ -60,7 +60,6 @@
             if (isMouseInElement(e as MouseEvent, thumb)) thumbHover = true;
         }
         currentThumb = null;
-        dispatch("change", value);
     }
 
     // Check if mouse event cords overlay with an element's area
@@ -84,6 +83,7 @@
 
         // Limit value min -> max
         value = Math.round((percent * (max - min)) / 100 + min);
+        dispatch("change", value);
     }
 
     // Handles both dragging of touch/mouse as well as simple one-off click/touches
@@ -195,20 +195,20 @@
     .range__wrapper {
         min-width: 100%;
         position: relative;
-        padding: 0.5rem;
+        padding: 0.8rem;
         box-sizing: border-box;
         outline: none;
     }
 
     .range__track {
-        height: 8px;
+        height: 10px;
         background-color: var(--track-bgcolor, #252525);
         border-radius: 999px;
     }
 
     .range__track--highlighted {
         width: 0;
-        height: 8px;
+        height: 10px;
         position: absolute;
         border-radius: 999px;
     }
@@ -218,12 +218,12 @@
         align-items: center;
         justify-content: center;
         position: absolute;
-        width: 30px;
-        height: 30px;
+        width: 35px;
+        height: 35px;
         background-color: var(--thumb-bgcolor, white);
         cursor: pointer;
         border-radius: 999px;
-        margin-top: -11px;
+        margin-top: -13px;
         transition: box-shadow 100ms;
         user-select: none;
         box-shadow: var(

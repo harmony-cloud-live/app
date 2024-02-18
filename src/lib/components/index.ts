@@ -9,6 +9,7 @@ export { default as WelcomeModal } from './modals/WelcomeModal.svelte';
 export { default as ChordButton } from './playback/ChordButton.svelte';
 export { default as ChordButtons } from './playback/ChordButtons.svelte';
 export { default as ManualButtons } from './playback/ManualButtons.svelte';
+export { default as ManualPlayer } from './playback/ManualPlayer.svelte';
 export { default as Player } from './playback/Player.svelte';
 export { default as SustainPedal } from './playback/SustainPedal.svelte';
 export { default as TempoControl } from './tempo/TempoControl.svelte';

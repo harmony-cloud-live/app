@@ -5,10 +5,12 @@
 
     $: inactive = !$isLeader;
     $: expandedId = '';
-
-    isLeader.subscribe(() => {
-        expandedId = '';
-    });
+    
+    const scrollToItem = (id: string) => {
+        const element = document.getElementById(id);
+        if (element)
+            element.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
 
     const handlePointerUp = (event: PointerEvent) => {
         if (event.target instanceof HTMLButtonElement || 
@@ -24,6 +26,9 @@
         }
         $controlSocket.newLeader(id);
     }
+
+    isLeader.subscribe(() => expandedId = '');
+    leaderId.subscribe(id => scrollToItem(id));
 </script>
 
 <svelte:window on:pointerup={handlePointerUp} />
@@ -31,6 +36,7 @@
 <div class="container" class:inactive>
     {#each $clients as client (client.userId)}
     <div class="client-wrapper" 
+        id={client.userId}
         class:expanded={expandedId === client.userId && client.userId !== $leaderId}
         animate:flip={{ duration: 150, easing: cubicOut }}>
         <button class="client" 
@@ -38,7 +44,7 @@
             on:click={() => handleClick(client.userId)}
         >
             {#if expandedId === client.userId && client.userId !== $leaderId}
-                <span class="client-name">promote {client.username}?</span>
+                <span class="client-name">promote {client.username}</span>
             {:else}
                 <span class="client-name">{client.username}</span>
             {/if}
@@ -67,11 +73,13 @@
 
     .container {
         display: flex;
-        justify-content: center;
-        align-items: center;
-        gap: 1em;
-        max-width: 100%;
-        padding: .25em;
+        flex-direction: row-reverse;
+        gap: .2em;
+        width: 44vw;
+        padding: .25em .5em 0 3em;
+        overflow: scroll;
+        -webkit-mask-image: linear-gradient(to left, transparent, black 0%, black 92%, transparent);
+        mask-image: linear-gradient(to left, transparent, black 0%, black 92%, transparent);
     }
 
     .client-wrapper {
@@ -85,12 +93,13 @@
         font-size: 1em;
         font-weight: 700;
         text-transform: uppercase;
-        letter-spacing: 0.1em;
+        letter-spacing: 0.08em;
         border-radius: inherit;
         height: inherit;
         border: inherit;
         transition: all 0.1s ease-in-out;
         background: #1a1a1a;
+        white-space: nowrap;
     }
 
     .expanded {

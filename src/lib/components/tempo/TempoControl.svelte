@@ -29,7 +29,7 @@
         justify-content: center;
         align-items: center;
         border-radius: 3em; 
-        width: 18em;
+        width: 15em;
         padding: .25em;
         
         &.active {

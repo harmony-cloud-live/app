@@ -34,7 +34,7 @@
 <svelte:window on:pointerup={handlePointerUp} />
 
 <div class="container fixed-center" class:isExpanded 
-    transition:fly={{ y: -100, duration: 250, easing: cubicInOut }}>
+    transition:fly={{ y: 100, duration: 250, easing: cubicInOut }}>
     <button class="leader" on:click={handleClick}>
         {#if isExpanded}
             {#if !$listenOnly && $myUsername.length > 0}
@@ -54,15 +54,16 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        height: 3.5em;
+        height: 4.5em;
         border: .2em;
         border-radius: 2.5em;
         background: #1a1a1a;
         transition: width 5s ease-in-out;
+        margin-top: -9em;
     }
 
-    button {
-        font-size: 1.25em;
+    button.leader {
+        font-size: 1.7em;
         font-weight: 400;
         text-transform: uppercase;
         letter-spacing: 0.1em;
@@ -79,6 +80,7 @@
 
     .bold {
         font-weight: 700;
+        letter-spacing: 0.07em;
     }
 
 </style>

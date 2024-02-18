@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { songTitle } from '$lib/stores';
+    import { manualProgression, songTitle } from '$lib/stores';
     import chordProgressions from '$lib/data/songs.json';
     import ManualButton from './ManualButton.svelte';
 
@@ -8,6 +8,7 @@
             name: s.title,
             chords: s.chordSymbols,
             key: s.key,
+            fontSize: Number(s.fontSize) ?? 2,
             length: s.chordSymbols.reduce((acc, curr) => acc + curr.length, 0),
         }
     });
@@ -15,16 +16,10 @@
     let song = songs[0];
     songTitle.subscribe($songTitle => {
         song = songs.find(s => s.name === $songTitle) ?? song;
+        $manualProgression = song.chords;
     });
 
-    let fontSize = 1;
-    $: {
-        const length = song.length;
-        if (length <= 8) fontSize = 2.5;
-        else if (length <= 18) fontSize = 2.25;
-        else if (length <= 32) fontSize = 2.1;
-        else if (length <= 64) fontSize = 1.9;
-    };
+    $: fontSize = song.fontSize ?? 2;
 </script>
 
 <div class="container">

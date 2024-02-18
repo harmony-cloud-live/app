@@ -158,12 +158,11 @@
         justify-content: center;
         align-items: center;
         width: 100%;
-        margin: .5em 0;
     }
 
     button {
-        width: 6em;
-        height: 6em;
+        width: 12em;
+        height: 5.5em;
         background: rgb(24, 24, 24);
         border-radius: 2em;
         border: 0;
@@ -173,7 +172,7 @@
         display:flex;
         justify-content: center;
         align-items: center;
-        margin: 0 .5em;
+        margin: 0 .4em;
         outline: .15em transparent;
         font-size: 1.2em;
 
@@ -184,8 +183,8 @@
     }
 
     .clear {
-        width: 8em;
-        height: 6em;
+        width: 12em;
+        height: 5.5em;
         white-space: pre;
         font-weight: 300;
         & img {
