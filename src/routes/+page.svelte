@@ -16,7 +16,6 @@
 
     const unsub = isLeader.subscribe((val) => {
         if (val) {
-            console.log('hi')
             flash = true;
             setTimeout(() => {
                 flash = false;
