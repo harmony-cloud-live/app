@@ -8,6 +8,8 @@
     import { cubicInOut } from "svelte/easing";
     import type { ChordCollection } from "$lib/types";
     
+    $: disabled = !$aiMode;
+    
     const collections = chordCollections.map(c => {
         return {
             name: c.title,
@@ -28,12 +30,19 @@
         $controlSocket.newMainSequence(selectedCollection.name);
         $songTitle = selectedCollection.name;
     }
+    
+    const goToAI = () => {
+        $aiMode = true;
+    }
 </script>
 
 {#if $isLeader}
-    <div class="container" transition:fly={{y: -50, duration: 150, easing: cubicInOut}}>
+    <div class="container" 
+        class:disabled 
+        transition:fly={{y: -50, duration: 150, easing: cubicInOut}} 
+        on:pointerdown={$aiMode ? null : goToAI}>
         <div class="refresh-wrapper">
-            <button class="refresh" on:click={refresh}>
+            <button class="refresh" on:click={refresh} disabled={!$aiMode}>
                 {#if $isLoadingMainSequence}
                     <Moon color="#fff" duration="1s" size={25}/>
                 {:else}
@@ -42,7 +51,7 @@
             </button>
         </div>
         <div class="dropdown">
-            <select bind:value={selectedCollection} on:change={refresh}>
+            <select bind:value={selectedCollection} on:change={refresh} disabled={!$aiMode}>
                 {#each collections as collection (collection.name)}
                     <option value={collection}>{collection.name}</option>
                 {/each}
@@ -52,6 +61,10 @@
 {/if}
 
 <style>
+    .disabled {
+        opacity: .4;
+    }
+
     select {
         -webkit-appearance: none;
         user-select: none;
